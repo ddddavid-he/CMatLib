@@ -264,8 +264,9 @@ double basicDeterminant(Matrix *a) {
 Matrix* basicInverse(Matrix* M) {
     if(M->row_n==1){
         return basicNumProd(1./M->m[0], basicOnesLike(M));
-    }else{
-        Matrix *cofactor = basicZerosLike(M);
+    }
+    
+    Matrix *cofactor = basicZerosLike(M);
     int i, j;
     for(i=0;i<cofactor->row_n;i++){
         for(j=0;j<cofactor->col_n;j++){
@@ -274,7 +275,6 @@ Matrix* basicInverse(Matrix* M) {
         }
     }
     return basicNumProd(1./basicDeterminant(M), basicTranspose(cofactor));
-    }
 }
 
 
