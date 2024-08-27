@@ -1,11 +1,11 @@
-#ifndef BASIC_CALCULATION
-#define BASIC_CALCULATION
+#ifndef CML_BASIC
+#define CML_BASIC
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-#include "basicCalculation.h" 
+#include "basic.h" 
 
 
 
@@ -538,7 +538,7 @@ Matrix* basicReshape(Matrix *M, Matrix *Shape){
 }
 
 
-Matrix *basicFlatten(Matrix *M) {
+Matrix* basicFlatten(Matrix *M) {
     Matrix *shape = basicOnes(1, 2);
     shape->m[0] = 1;
     shape->m[1] = (double)M->row_n*M->col_n;

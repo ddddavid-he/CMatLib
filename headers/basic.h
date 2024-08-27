@@ -1,5 +1,5 @@
-#ifndef BASIC_CALCULATION_H  
-#define BASIC_CALCULATION_H
+#ifndef CML_BASIC_H  
+#define CML_BASIC_H
 
 
     #define NUM_LEN 8

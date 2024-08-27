@@ -1,31 +1,26 @@
-#ifndef MATRIX_CALCULATION
-#define MATRIX_CALCULATION
+#ifndef CML_C_MAT_LIB
+#define CML_C_MAT_LIB
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "basicCalculation.c"
+#include "basic.c"
 
-#include "matrixCalculation.h"
-
-#define ERROR 0
-#define SUCCEED 1
-#define WARN -1
-
-#define TRUE 1
-#define FALSE 0
-
-typedef char bool;
+#include "CMatLib.h"
 
 
-int freeMatrix(Matrix **Mp) {
+
+int cml_mp_is_available(Matrix *Mp)
+
+
+int cml_freeMatrix(Matrix **Mp) {
     // CAUTION: 
     // Mp have to be Pointer of Matrix Pointer.
     if(Mp==NULL){
-        printf("freeMatrix: pointer of Matrix pointer Mp is NULL.\n");
+        printf("cml_freeMatrix: pointer of Matrix pointer Mp is NULL.\n");
         return ERROR;
     }else if((*Mp)==NULL){
-        printf("freeMatrix: Matrix is already NULL.\n");
+        printf("cml_freeMatrix: Matrix is already NULL.\n");
         return WARN;
     }else{
         basicFreeMatrix(Mp);
@@ -34,15 +29,15 @@ int freeMatrix(Matrix **Mp) {
 }
 
 
-int fillMatrixFromArray(double *array, int row, int col, Matrix *M) {
+int cml_fillMatrixFromArray(double *array, int row, int col, Matrix *M) {
     if(array==NULL){
-        printf("fillMatrixFromArray: array is NULL.\n");
+        printf("cml_fillMatrixFromArray: array is NULL.\n");
         return ERROR;
     }else if(row<=0||col<=0){
-        printf("fillMatrixFromArray: row and col should be positive.\n");
+        printf("cml_fillMatrixFromArray: row and col should be positive.\n");
         return ERROR;
     }else if(M==NULL){
-        printf("fillMatrixFromArray: Matrix is NULL.\n");
+        printf("cml_fillMatrixFromArray: Matrix is NULL.\n");
         return ERROR;
     }else{
         basicFillMatrixFromArray(array, row, col, M);
@@ -51,7 +46,7 @@ int fillMatrixFromArray(double *array, int row, int col, Matrix *M) {
 }
 
 
-Matrix* array2Matrix(double *array, int row, int col) {
+Matrix* cml_array2Matrix(double *array, int row, int col) {
     if(array==NULL){
         printf("array2Matrix: array is NULL.\n");
         return NULL;
@@ -64,7 +59,7 @@ Matrix* array2Matrix(double *array, int row, int col) {
 }
 
 
-Matrix* __reformIndex__(int RowCol, Matrix *Indices) {
+Matrix* __cml_reformIndex__(int RowCol, Matrix *Indices) {
     Matrix *in = NULL;
     if(Indices->row_n!=1 && Indices->col_n==1){
         in = basicTranspose(Indices);
@@ -88,7 +83,7 @@ Matrix* __reformIndex__(int RowCol, Matrix *Indices) {
 }
 
 
-int getIndex(Matrix* M, int i, int j) {
+int cml_getIndex(Matrix* M, int i, int j) {
     if(M==NULL){
         printf("getIndex: Matrix is NULL.\n");
         exit(-1);
@@ -116,7 +111,7 @@ int getIndex(Matrix* M, int i, int j) {
 }
 
 
-int showMatrix(Matrix *M) {
+int cml_showMatrix(Matrix *M) {
     if(M==NULL){
         printf("showMatrix: Matrix is NULL\n");
         return ERROR;
@@ -131,7 +126,7 @@ int showMatrix(Matrix *M) {
 }
 
 
-Matrix* copy_m(Matrix *M) {
+Matrix* cml_copy_m(Matrix *M) {
     Matrix *re = malloc(sizeof(Matrix));
     if(re==NULL){
         printf("copy_m: Fail to malloc.\n");
@@ -148,7 +143,7 @@ Matrix* copy_m(Matrix *M) {
 }
 
 
-Matrix* range(int from, int to, int skip) {
+Matrix* cml_range(int from, int to, int skip) {
     if(from==to){
         if(skip==0){
             return basicNumProd(from, basicOnes(1, 1));
@@ -177,7 +172,7 @@ Matrix* range(int from, int to, int skip) {
 }
 
 
-Matrix* zeros_m(int row, int col) {
+Matrix* cml_zeros_m(int row, int col) {
     if(row*col<=0){
         printf("zeros_m: Cannot create a Matrix with non-positive row or column number.\n");
         return NULL;
@@ -187,7 +182,7 @@ Matrix* zeros_m(int row, int col) {
 }
 
 
-Matrix* ones_m(int row, int col) {
+Matrix* cml_ones_m(int row, int col) {
     if(row*col<=0){
         printf("ones_m: Cannot create a Matrix with non-positive row or column number.\n");
         return NULL;
@@ -197,7 +192,7 @@ Matrix* ones_m(int row, int col) {
 }
 
 
-Matrix* zerosLike_m(Matrix* M) {
+Matrix* cml_zerosLike_m(Matrix* M) {
     if(M==NULL){
         printf("zerosLike_m: Matrix is NULL.\n");
         return NULL;
@@ -210,7 +205,7 @@ Matrix* zerosLike_m(Matrix* M) {
 }
 
 
-Matrix* onesLike_m(Matrix* M) {
+Matrix* cml_onesLike_m(Matrix* M) {
     if(M==NULL){
         printf("onesLike_m: Matrix is NULL.\n");
         return NULL;
@@ -223,7 +218,7 @@ Matrix* onesLike_m(Matrix* M) {
 }
 
 
-Matrix* identity_m(int d) {
+Matrix* cml_identity_m(int d) {
     if(d<=0){
         printf("identity_m: Dimension d should be positive.\n");
         return NULL;
@@ -233,7 +228,7 @@ Matrix* identity_m(int d) {
 }
 
 
-Matrix* identityLike_m(Matrix *M) {
+Matrix* cml_identityLike_m(Matrix *M) {
     if(M==NULL){
         printf("identityLike_m: Matrix is NULL\n");
         return NULL;
@@ -251,7 +246,7 @@ Matrix* identityLike_m(Matrix *M) {
 }
 
 
-Matrix* trans_m(Matrix* M) {
+Matrix* cml_trans_m(Matrix* M) {
     if(M==NULL){
         printf("trans_m: Matrix is NULL\n");
         return NULL;
@@ -266,7 +261,7 @@ Matrix* trans_m(Matrix* M) {
 }
 
 
-Matrix* add_m(Matrix* a, Matrix *b) {
+Matrix* cml_add_m(Matrix* a, Matrix *b) {
     if(a==NULL || b==NULL){
         printf("add_m: Matrix is NULL.\n");
         return NULL;
@@ -285,7 +280,7 @@ Matrix* add_m(Matrix* a, Matrix *b) {
 }
 
 
-Matrix* nProd_m(double a, Matrix *M) {
+Matrix* cml_nProd_m(double a, Matrix *M) {
     if(M==NULL){
         printf("nProd_m: Matrix is NULL.\n");
         return NULL;
@@ -300,7 +295,7 @@ Matrix* nProd_m(double a, Matrix *M) {
 }
 
 
-Matrix* minus_m(Matrix* a, Matrix* b) {
+Matrix* cml_minus_m(Matrix* a, Matrix* b) {
     if(a==NULL || b==NULL){
         printf("minus_m: Matrix is NULL.\n");
         return NULL;
@@ -315,7 +310,7 @@ Matrix* minus_m(Matrix* a, Matrix* b) {
 }
 
 
-Matrix* dot_m(Matrix *a, Matrix *b) {
+Matrix* cml_dot_m(Matrix *a, Matrix *b) {
     if(a==NULL || b==NULL){
         printf("dot_m: Matrix is NULL.\n");
         return NULL;
@@ -331,7 +326,7 @@ Matrix* dot_m(Matrix *a, Matrix *b) {
 }
 
 
-double det_m(Matrix* M) {
+double cml_det_m(Matrix* M) {
     if(M==NULL){
         printf("det_m: Matrix is NULL.\n");
         exit(-1);
@@ -344,7 +339,7 @@ double det_m(Matrix* M) {
 }
 
 
-Matrix* inv_m(Matrix *M) {
+Matrix* cml_inv_m(Matrix *M) {
     if(M==NULL){
         printf("inv_m: Matrix is NULL.\n");
         return NULL;
@@ -362,7 +357,7 @@ Matrix* inv_m(Matrix *M) {
 }
 
 
-Matrix* diag_m(double *m, int dim) {
+Matrix* cml_diag_m(double *m, int dim) {
     if(m==NULL){
         printf("diag_m: elem is NULL.\n");
         return NULL;
@@ -375,7 +370,7 @@ Matrix* diag_m(double *m, int dim) {
 }
 
 
-Matrix* cross_3d_m(Matrix *a, Matrix *b) {
+Matrix* cml_cross_3d_m(Matrix *a, Matrix *b) {
     if(a==NULL || b==NULL){
         printf("cross_3d_m: Matrix is NULL.\n");
         return NULL;
@@ -393,7 +388,7 @@ Matrix* cross_3d_m(Matrix *a, Matrix *b) {
 }
 
 
-Matrix* slice_m(Matrix *M, Matrix *R, Matrix *C) {
+Matrix* cml_slice_m(Matrix *M, Matrix *R, Matrix *C) {
     if(M==NULL || R==NULL || C==NULL){
         printf("slice_m: Matrix is NULL.\n");
         return NULL;
@@ -428,7 +423,7 @@ Matrix* slice_m(Matrix *M, Matrix *R, Matrix *C) {
 }
 
 
-Matrix* rowSlice_m(Matrix *M, Matrix *RS) {
+Matrix* cml_rowSlice_m(Matrix *M, Matrix *RS) {
     Matrix *re = slice_m(M, RS, basicRange(0,M->col_n,1));
     if(!re) {
         printf("rowSlice_m: Error. See message of slice_m above.\n");
@@ -437,7 +432,7 @@ Matrix* rowSlice_m(Matrix *M, Matrix *RS) {
 }
 
 
-Matrix* colSlice_m(Matrix *M, Matrix *CS) {
+Matrix* cml_colSlice_m(Matrix *M, Matrix *CS) {
     Matrix *re = slice_m(M, basicRange(0,M->row_n,1), CS);
     if(!re) {
         printf("colSlice_m: Error. See message of slice_m above.\n");
@@ -446,7 +441,7 @@ Matrix* colSlice_m(Matrix *M, Matrix *CS) {
 }
 
 
-Matrix* sum_m(Matrix* M, int axis) {
+Matrix* cml_sum_m(Matrix* M, int axis) {
     if(M==NULL){
         printf("sum_m: Matrix is NULL.\n");
         return NULL;
@@ -463,7 +458,7 @@ Matrix* sum_m(Matrix* M, int axis) {
 }
 
 
-Matrix* mean_m(Matrix *M, int axis) {
+Matrix* cml_mean_m(Matrix *M, int axis) {
     if(M==NULL){
         printf("mean_m: Matrix is NULL.\n");
         return NULL;
@@ -480,7 +475,7 @@ Matrix* mean_m(Matrix *M, int axis) {
 }
 
 
-Matrix* matPow_m(Matrix *M, int p) {
+Matrix* cml_matPow_m(Matrix *M, int p) {
     if(M==NULL){
         printf("matPow_m: Matrix is NULL.\n");
         return NULL;
@@ -512,7 +507,7 @@ Matrix* matPow_m(Matrix *M, int p) {
 }
 
 
-Matrix* elemPow_m(Matrix* M, double p) {
+Matrix* cml_elemPow_m(Matrix* M, double p) {
     if(M==NULL){
         printf("elemPow_m: Matrix is NULL.\n");
         return NULL;
@@ -525,7 +520,7 @@ Matrix* elemPow_m(Matrix* M, double p) {
 }
 
 
-Matrix* sortVec_m(Matrix *vec) {
+Matrix* cml_sortVec_m(Matrix *vec) {
     if(vec==NULL){
         printf("sortVec: Vec is NULL.\n");
         return NULL;
@@ -538,7 +533,7 @@ Matrix* sortVec_m(Matrix *vec) {
 }
 
 
-Matrix* sort_m(Matrix *M, int axis, int index) {
+Matrix* cml_sort_m(Matrix *M, int axis, int index) {
     if(M==NULL){
         printf("sort_m: Matrix is NULL.\n");
         return NULL;
@@ -562,7 +557,7 @@ Matrix* sort_m(Matrix *M, int axis, int index) {
 }
 
 
-Matrix* reverse_m(Matrix *vec) {
+Matrix* cml_reverse_m(Matrix *vec) {
     if(vec==NULL){
         printf("reverse_m: Vec is NULL.\n");
         return NULL;
@@ -575,7 +570,7 @@ Matrix* reverse_m(Matrix *vec) {
 }
 
 
-double vecMax_m(Matrix *vec){
+double cml_vecMax_m(Matrix *vec){
     if(vec==NULL){
         printf("vecMax_m: Vec is NULL.\n");
         exit(-1);
@@ -588,7 +583,7 @@ double vecMax_m(Matrix *vec){
 }
 
 
-double vecMin_m(Matrix *vec){
+double cml_vecMin_m(Matrix *vec){
     if(vec==NULL){
         printf("vecMin_m: Vec is NULL.\n");
         exit(-1);
@@ -601,7 +596,7 @@ double vecMin_m(Matrix *vec){
 }
 
 
-Matrix* max_m(Matrix *M, int axis) {
+Matrix* cml_max_m(Matrix *M, int axis) {
     if(M==NULL){
         printf("max_m: Matrix is NULL.\n");
         return NULL;
@@ -619,7 +614,7 @@ Matrix* max_m(Matrix *M, int axis) {
 }
 
 
-Matrix* min_m(Matrix *M, int axis) {
+Matrix* cml_min_m(Matrix *M, int axis) {
     if(M==NULL){
         printf("min_m: Matrix is NULL.\n");
         return NULL;
@@ -637,7 +632,7 @@ Matrix* min_m(Matrix *M, int axis) {
 }
 
 
-int apply_m(Matrix *From, Matrix *To, Matrix *RP, Matrix*CP) {
+int cml_apply_m(Matrix *From, Matrix *To, Matrix *RP, Matrix*CP) {
     if(!(From&&To&&RP&&CP)){
         printf("apply_m: At least one of the Matrixes is NULL.\n");
         return ERROR;
@@ -674,7 +669,7 @@ int apply_m(Matrix *From, Matrix *To, Matrix *RP, Matrix*CP) {
 }
 
 
-Matrix* shape_m(Matrix *M) {
+Matrix* cml_shape_m(Matrix *M) {
     if(M==NULL) {
         printf("shape_m: Matrix is NULL.\n");
         return NULL;
@@ -687,7 +682,7 @@ Matrix* shape_m(Matrix *M) {
 }
 
 
-Matrix* reshape_m(Matrix *M, Matrix *Shape) {
+Matrix* cml_reshape_m(Matrix *M, Matrix *Shape) {
     if(M==NULL||Shape==NULL){
         printf("reshape_m: Matrix or Shape is NULL.\n");
         return NULL;
@@ -708,7 +703,7 @@ Matrix* reshape_m(Matrix *M, Matrix *Shape) {
 }
 
 
-Matrix* reshape2_m(Matrix *M, int row, int col) {
+Matrix* cml_reshape2_m(Matrix *M, int row, int col) {
     Matrix *shape = basicZeros(1, 2);
     shape->m[0] = (double)row;
     shape->m[1] = (double)col;
@@ -722,7 +717,7 @@ Matrix* reshape2_m(Matrix *M, int row, int col) {
 }
 
 
-Matrix* flatten_m(Matrix *M) {
+Matrix* cml_flatten_m(Matrix *M) {
     Matrix *re = reshape2_m(M, 1, M->row_n*M->col_n);
     if(!re){
         printf("flatten_m: Error. See reshape_m above.\n");

@@ -1,16 +1,16 @@
 
-main: matrixCalculation.o
-	gcc ./lib/libMatrix.a main.c -o main;
+main: CMatLib.o
+	gcc ./lib/libcml.a main.c -o main;
 
 
-matrixCalculation.o: basicCalculation.o
-	gcc -I headers -c src/matrixCalculation.c -o lib/matrixCalculation.o
-	ar rcs lib/libMatrix.a lib/matrixCalculation.o
-	# nm lib/libMatrix.a
+CMatLib.o: basic.o
+	gcc -I headers -c src/CMatLib.c -o lib/CMatLib.o
+	ar rcs lib/libcml.a lib/CMatLib.o
+	# nm lib/libcml.a
 	
 
-basicCalculation.o: 
-	gcc -I headers -c src/basicCalculation.c -o lib/basicCalculation.o
+basic.o: 
+	gcc -I headers -c src/basic.c -o lib/basic.o
 
 
 clean:

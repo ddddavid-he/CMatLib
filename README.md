@@ -1,2 +1,3 @@
-# matrixCalculation
-A lib of basic matrix calculation written in C 
+# CMatLib
+
+A C library of basic matrix calculation.
