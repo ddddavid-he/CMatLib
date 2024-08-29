@@ -37,53 +37,51 @@
 
     Matrix* cml_array2Matrix(double *array, int row, int col);
 
-    Matrix* cml_copy_m(Matrix *M);
+    Matrix* cml_copy(Matrix *M);
 
-    Matrix* cml_range(int from, int to, int skip);
+    Matrix* cml_range(int from, int to, int step);
 
-    Matrix* cml_zeros_m(int row, int col);
+    Matrix* cml_zeros(int row, int col);
 
-    Matrix* cml_ones_m(int row, int col);
+    Matrix* cml_ones(int row, int col);
 
-    Matrix* cml_zerosLike_m(Matrix *M);
+    Matrix* cml_zerosLike(Matrix *M);
 
-    Matrix* cml_onesLike_m(Matrix *M);
+    Matrix* cml_onesLike(Matrix *M);
 
-    Matrix* cml_identity_m(int dim);
+    Matrix* cml_identity(int dim);
 
-    Matrix* cml_identityLike_m(Matrix *M);
+    Matrix* cml_transpose(Matrix *M);
 
-    Matrix* cml_trans_m(Matrix *M);
+    Matrix* cml_add(Matrix *A, Matrix *B);
 
-    Matrix* cml_add_m(Matrix *A, Matrix *B);
+    Matrix* cml_minus(Matrix *A, Matrix *B);
 
-    Matrix* cml_minus_m(Matrix *A, Matrix *B);
+    Matrix* cml_numProd(double a, Matrix *M);
 
-    Matrix* cml_nProd_m(double a, Matrix *A);
+    Matrix* cml_dot(Matrix *A, Matrix *B);
 
-    Matrix* cml_dot_m(Matrix *A, Matrix *B);
+    double cml_det(Matrix *M);
 
-    double cml_det_m(Matrix *M);
+    Matrix* cml_inv(Matrix *M);
 
-    Matrix* cml_inv_m(Matrix *M);
+    Matrix* cml_diag(double *elem, int dim);
 
-    Matrix* cml_diag_m(double *elem, int dim);
+    Matrix* cml_cross_3d(Matrix *A, Matrix *B);
 
-    Matrix* cml_cross_3d_m(Matrix *A, Matrix *B);
+    Matrix* cml_slice(Matrix *M, Matrix *Row_Idx, Matrix *Col_Idx);
 
-    Matrix* cml_slice_m(Matrix *M, Matrix *Row_Slice, Matrix *Col_Slice);
+    Matrix* cml_rowSlice(Matrix *M, Matrix *Row_Idx);
 
-    Matrix* cml_rowSlice_m(Matrix *M, Matrix *Row_Slice); 
+    Matrix* cml_colSlice(Matrix *M, Matrix *Col_Idx);
 
-    Matrix* cml_colSlice_m(Matrix *M, Matrix *Col_Slice); 
+    Matrix* cml_sum(Matrix *M, int axis);
 
-    Matrix* cml_sum_m(Matrix *M, int axis);
+    Matrix* cml_mean(Matrix *, int axis);
 
-    Matrix* cml_mean_m(Matrix *, int axis);
+    Matrix* cml_power(Matrix *M, int p);
 
-    Matrix* cml_matPow_m(Matrix *M, int p);
-
-    Matrix* cml_elemPow_m(Matrix *M, double p);
+    Matrix* cml_power_elementWise(Matrix *M, double p);
 
     Matrix* cml_sortVec_m(Matrix *Vec);
 
@@ -108,5 +106,8 @@
     Matrix* cml_reshape2_m(Matrix *M, int row, int col);
 
     Matrix* cml_flatten_m(Matrix *M);
+
+    // TODO:
+    Matrix* cml_concatenate(Matrix *A, Matrix *B, int axis);
 
 #endif

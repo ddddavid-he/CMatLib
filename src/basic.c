@@ -61,19 +61,19 @@ void basicFillMatrixFromArray(double* array, int row, int col, Matrix* M) {
     int i, j;
     M->row_n = row;
     M->col_n = col;
-    double* m = (double*) calloc(row*col, sizeof(double));
+    double *m = M->m;
     for(i=0;i<row;i++) {
         for(j=0;j<col;j++) {
             int index = giveIndex(M, i, j);
             m[index] = array[index];
         }
     }
-    M->m = m;
 }
 
 
 Matrix* basicArray2Matrix(double* array, int row, int col) {
     Matrix *M = malloc(sizeof(Matrix));
+    M-m = (double*) calloc(row * col, sizeof(double));
     basicFillMatrixFromArray(array, row, col, M);
     return M;
 }
@@ -366,7 +366,7 @@ Matrix* basicMean(Matrix* M, int axis) {
 
 Matrix* basicMatPow(Matrix* M, int p) {
     // only square matrix can do this
-    Matrix *re = basicIdentityLike(M);
+    Matrix *re = basicIdentity(M->row_n);
     for(int i=0;i<p;i++){
         re = basicDot(re, M);
     }

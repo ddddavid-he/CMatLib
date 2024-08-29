@@ -5,11 +5,18 @@
     #define NUM_LEN 8
     #define FLOAT_LEN 5
 
+    typedef enum {
+        INT,
+        FLOAT,
+        DOUBLE,
+        CHAR
+    } DataType;
 
     typedef struct __MATRIX__ {
         int row_n;
         int col_n;
         double *m;
+        DataType dtype;
     } Matrix;
 
 

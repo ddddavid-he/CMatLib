@@ -1,3 +1,3 @@
 # CMatLib
 
-A C library of basic matrix calculation.
+A C library of basic matrix operations.
