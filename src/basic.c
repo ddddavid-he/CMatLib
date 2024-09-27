@@ -109,8 +109,17 @@ Matrix* basicRange(int from, int to, int skip) {
 } 
 
 
+Matrix* basicEmpty(int row, int col) {
+    Matrix *M = (Matrix*) malloc(sizeof(Matrix));
+    M->row_n = row;
+    M->col_n = col;
+    M->m = calloc(row*col, sizeof(double));
+    return M;
+}
+
+
 Matrix* basicZeros(int row, int col) {
-    Matrix * M = malloc(sizeof(Matrix));
+    Matrix *M = malloc(sizeof(Matrix));
     M->row_n = row;
     M->col_n = col;
     M->m = calloc(row*col, sizeof(double));
@@ -500,7 +509,8 @@ Matrix* basicMatMin(Matrix *M, int axis) {
     }
     if(axis==1){
         re = basicTranspose(re);
-    }else if(axis==-1){
+    }
+    if(axis==-1){
         re->m[0] = basicVecMin(re);
         re = basicRSlice(re, basicRange(0,1,1));
     }
@@ -547,6 +557,45 @@ Matrix* basicFlatten(Matrix *M) {
     return re;
 }
 
+
+Matrix* basicConcatenate(Matrix *A, Matrix *B, int axis) {
+    int row=0, col=0;
+    Matrix *R_idx, *C_idx;
+    Matrix *new = basicEmpty(1, A->row_n*A->col_n + B->row_n+B->col_n);
+
+    if(axis==0) {
+        row = A->row_n + B->row_n;
+        col = A->col_n;
+    }else if(axis==1) {
+        col = A->col_n + B->col_n;
+        row = A->row_n;
+        A = basicTranspose(A);
+        B = basicTranspose(B);
+    }else {
+        basicFreeMatrix(&new);
+        return NULL;
+    }
+
+    R_idx = basicRange(0, A->row_n, 1);
+    C_idx = basicRange(0, B->col_n, 1);
+    basicApply(A, new, R_idx, C_idx);
+    basicFreeMatrix(&R_idx);
+    basicFreeMatrix(&C_idx);
+
+    R_idx = basicRange(A->row_n, A->row_n+B->row_n, 1);
+    C_idx = basicRange(A->col_n, A->col_n+B->col_n, 1);
+    basicApply(B, new, R_idx, C_idx);
+    basicFreeMatrix(&R_idx);
+    basicFreeMatrix(&C_idx);
+    if(axis==1) {
+        Matrix *tmp = basicTranspose(new);
+        basicFreeMatrix(&new);
+        basicFreeMatrix(&A);
+        basicFreeMatrix(&B);
+        new = tmp;
+    }
+    return new;
+}
 
 
 #endif

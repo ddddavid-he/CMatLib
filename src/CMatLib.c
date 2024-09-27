@@ -18,16 +18,16 @@ void __cml_logger(
     va_list args;
     va_start(args, message);
     if(type==0){
-        const char *type_name = "Error"
+        const char *type_name = "Error";
     } else {
-        const char *type_name = "Warning"
+        const char *type_name = "Warning";
     }
     fprintf(stderr, "%s in func %s: (File: %s, Line: %d) ", type_name, func, file, line);
     vfprintf(stderr, message, args);
     fprintf(stderr, "\n");
     va_end(args);
     if(type==0){
-        exit(-1)
+        exit(-1);
     }
 }
 
@@ -81,7 +81,7 @@ int cml_fillMatrixFromArray(double *array, int row, int col, Matrix *M) {
         return ERROR;
     }
     if( M->m == NULL ) {
-        cml_error("Matrix->m is not allocated yet.")
+        cml_error("Matrix->m is not allocated yet.");
     }
 
     basicFillMatrixFromArray(array, row, col, M);
@@ -223,7 +223,7 @@ Matrix* cml_zerosLike(Matrix* M) {
         cml_error("Matrix is NULL.");
         return NULL;
     }
-    return zeros_m(M->row_n, M->col_n);
+    return cml_zeros(M->row_n, M->col_n);
 }
 
 
@@ -232,7 +232,7 @@ Matrix* cml_onesLike(Matrix* M) {
         cml_error("Matrix is NULL.");
         return NULL;
     }
-    return ones_m(M->row_n, M->col_n);
+    return cml_ones(M->row_n, M->col_n);
 }
 
 
@@ -398,8 +398,8 @@ Matrix* cml_slice(Matrix *M, Matrix *R, Matrix *C) {
         return NULL;
     }
     Matrix *r_tmp=NULL, *c_tmp=NULL;
-    r_tmp = __reformIndex__(M->row_n, R);
-    c_tmp = __reformIndex__(M->col_n, C);
+    r_tmp = __cml_reformIndex__(M->row_n, R);
+    c_tmp = __cml_reformIndex__(M->col_n, C);
     for(int i=0;i<r_tmp->col_n;i++){
         if(r_tmp->m[i]>=M->row_n){
             cml_error("row index %d out of range %d.", (int)r_tmp->m[i], M->row_n);
@@ -425,7 +425,7 @@ Matrix* cml_rowSlice(Matrix *M, Matrix *R_Idx) {
 
 
 Matrix* cml_colSlice(Matrix *M, Matrix *C_Idx) {
-    return slice_m(M, basicRange(0,M->row_n,1), C_Idx);
+    return cml_slice(M, basicRange(0,M->row_n,1), C_Idx);
 }
 
 
@@ -475,7 +475,7 @@ Matrix* cml_power(Matrix *M, int p) {
         return NULL;
     }
     if(M->row_n!=M->col_n){
-        cml_error("only square matrix is available for power.");
+        cml_error("Only square matrix is available for power.");
         return NULL;
     }
     Matrix *re = NULL;
@@ -514,211 +514,218 @@ Matrix* cml_power_elementWise(Matrix *M, double p) {
 }
 
 
-Matrix* cml_sortVec_m(Matrix *vec) {
+Matrix* cml_sortVec(Matrix *vec) {
     if(vec==NULL){
-        printf("sortVec: Vec is NULL.\n");
+        cml_error("Pointer vec is NULL.");
         return NULL;
-    }else if(vec->m==NULL){
-        printf("sort_m: Vec->m is NULL.\n");
-        return NULL;
-    }else{
-        return basicVecSort(vec);
     }
+    if(vec->m==NULL){
+        cml_error("vec->m is NULL.");
+        return NULL;
+    }
+    return basicVecSort(vec);
 }
 
 
-Matrix* cml_sort_m(Matrix *M, int axis, int index) {
+Matrix* cml_sort(Matrix *M, int axis, int index) {
     if(M==NULL){
-        printf("sort_m: Matrix is NULL.\n");
+        cml_error("Matrix is NULL.");
         return NULL;
-    }else if(M->m==NULL){
-        printf("sort_m: Matrix->m is NULL.\n");
-        return NULL;
-    }else{
-        if(axis!=0 && axis!=1){
-            printf("sort_m: axis accepts only 0 or 1.\n");
-            return NULL;
-        }else if(index>=(axis==0?M->col_n:M->row_n) 
-              && index<-(axis==0?M->col_n:M->row_n)){
-            printf("sort_m: index out of range.\n");
-            return NULL;
-        }else{
-            index = index>=0?index:
-                (axis==0?M->col_n:M->row_n)+index;
-            return basicMatSort(M, axis, index);
-        }
     }
+    if(M->m==NULL){
+        cml_error("Matrix->m is NULL.");
+        return NULL;
+    }
+    if(axis!=0 && axis!=1){
+        cml_error("Axis accepts only 0 or 1.");
+        return NULL;
+    }
+    if(index>=(axis==0?M->col_n:M->row_n)
+      && index<-(axis==0?M->col_n:M->row_n)){
+        cml_error("sort_m: index out of range.");
+        return NULL;
+    }
+    if(index>=0){
+        ;
+    } else {
+        index = (axis == 0 ? M->col_n : M->row_n) + index;
+    }
+    return basicMatSort(M, axis, index);
 }
 
 
-Matrix* cml_reverse_m(Matrix *vec) {
+Matrix* cml_reverse(Matrix *vec) {
     if(vec==NULL){
-        printf("reverse_m: Vec is NULL.\n");
+        cml_error("Pointer vec is NULL.");
         return NULL;
-    }else if(vec->m==NULL){
-        printf("reverse_m: Vec->m is NULL.\n");
+    }
+    if(vec->m==NULL){
+        cml_error("vec->m is NULL.");
         return NULL;
-    }else{
-        return basicReverse(vec);
     }
+    return basicReverse(vec);
 }
 
 
-double cml_vecMax_m(Matrix *vec){
+double cml_vecMax(Matrix *vec){
     if(vec==NULL){
-        printf("vecMax_m: Vec is NULL.\n");
-        exit(-1);
-    }else if(vec->m==NULL){
-        printf("vecMax_m: Vec->m is NULL.\n");
-        exit(-1);
-    }else{
-        return basicVecMax(vec);
+        cml_error("Pointer vec is NULL.");
+        return NULL;
     }
+    if(vec->m==NULL){
+        cml_error("vec->m is NULL.");
+        return NULL;
+    }
+    return basicVecMax(vec);
 }
 
 
-double cml_vecMin_m(Matrix *vec){
+double cml_vecMin(Matrix *vec){
     if(vec==NULL){
-        printf("vecMin_m: Vec is NULL.\n");
-        exit(-1);
-    }else if(vec->m==NULL){
-        printf("vecMin_m: Vec->m is NULL.\n");
-        exit(-1);
-    }else{
-        return basicVecMin(vec);
+        cml_error("vec is NULL.");
+        return NULl;
     }
+    if(vec->m==NULL) {
+        cml_error("vec->m is NULL.");
+        return NULL;
+    }
+    return basicVecMin(vec);
 }
 
 
-Matrix* cml_max_m(Matrix *M, int axis) {
+Matrix* cml_max(Matrix *M, int axis) {
     if(M==NULL){
-        printf("max_m: Matrix is NULL.\n");
+        cml_error("Matrix is NULL.");
         return NULL;
-    }else if(M->m==NULL){
-        printf("max_m: Matrix->m is NULL.\n");
-        return NULL;
-    }else{
-        if(axis!=-1 && axis!=0 && axis !=1){
-            printf("max_m: axis should be (-1, 0, 1).\n");
-            return NULL;
-        }else{
-            return basicMatMax(M, axis);
-        }
     }
+    if(M->m==NULL){
+        cml_error("Matrix->m is NULL.");
+        return NULL;
+    }
+    if(axis!=-1 && axis!=0 && axis !=1){
+        cml_error("Axis should be -1, 0 or 1.");
+        return NULL;
+    }
+    return basicMatMax(M, axis);
 }
 
 
-Matrix* cml_min_m(Matrix *M, int axis) {
+Matrix* cml_min(Matrix *M, int axis) {
     if(M==NULL){
-        printf("min_m: Matrix is NULL.\n");
+        cml_error("Matrix is NULL.");
         return NULL;
-    }else if(M->m==NULL){
-        printf("min_m: Matrix->m is NULL.\n");
-        return NULL;
-    }else{
-        if(axis!=-1 && axis!=0 && axis !=1){
-            printf("min_m: axis should be (-1, 0, 1).\n");
-            return NULL;
-        }else{
-            return basicMatMin(M, axis);
-        }
     }
+    if(M->m==NULL){
+        cml_error("Matrix->m is NULL.");
+        return NULL;
+    }
+    if(axis!=-1 && axis!=0 && axis !=1){
+        cml_error("Axis should be (-1, 0, 1).");
+        return NULL;
+    }
+    return basicMatMin(M, axis);
 }
 
 
-int cml_apply_m(Matrix *From, Matrix *To, Matrix *RP, Matrix*CP) {
-    if(!(From&&To&&RP&&CP)){
-        printf("apply_m: At least one of the Matrixes is NULL.\n");
+int cml_apply(Matrix *From, Matrix *To, Matrix *Row_idx, Matrix*Col_idx) {
+    if( !(From && To && Row_idx && Col_idx) ){
+        cml_error("From, To, Row_idx, Col_idx cannot be NULL.");
         return ERROR;
-    }else if(!(From->m&&To->m&&RP->m&&CP->m)){
-        printf("apply_m: At least one of Matrix->m(s) is NULL.\n");
-        return ERROR;
-    }else{
-        if(RP->row_n!=1){
-            RP = basicTranspose(RP);
-        }
-        if(CP->row_n!=1){
-            CP = basicTranspose(CP);
-        }
-        if(RP->col_n>From->row_n||CP->col_n>From->col_n){
-            printf("apply_m: Index out of range. Length of RP or CP is large than size of From.\n");
-            return ERROR;
-        }else if(RP->col_n<From->row_n||CP->col_n<From->col_n){
-            printf("W: apply_m: Length of RP or CP does not match (smaller) size of From.\n");
-            return WARN;
-        }else{
-            if(RP->col_n>To->row_n||CP->col_n>To->col_n){
-                printf("apply_m: Index out of range. Length of RP or CP is larger than size of To.\n");
-                return ERROR;
-            }else{
-                if(basicApply(From, To, RP, CP)){
-                    return SUCCEED;
-                }
-                else{
-                    return ERROR;
-                }
-            }
-        }
     }
+    if(
+        !(From->m && To->m && Row_idx->m && Col_idx->m)
+    ){
+        cml_error("NULL found in Matrix->m(s).");
+        return ERROR;
+    }
+    if(Row_idx->row_n!=1){
+        Row_idx = basicTranspose(Row_idx);
+    }
+    if(Col_idx->row_n!=1){
+        Col_idx = basicTranspose(Col_idx);
+    }
+    if(
+        Row_idx->col_n > From->row_n ||
+        Col_idx->col_n > From->col_n
+    ){
+        cml_error("Length of Row_idx or Col_idx is large than size of From.");
+        return ERROR;
+    }
+
+    if(
+        basicMatMax(Row_idx, -1)->m[0] > To->row_n ||
+        basicMatMax(Col_idx, -1)->m[0] > To->col_n
+    ) {
+        cml_error("Index out of range. Value(s) of Row_idx or Col_idx is (are) larger than size of To.");
+        return ERROR;
+    }
+    return basicApply(From, To, Row_idx, Col_idx);
 }
 
 
-Matrix* cml_shape_m(Matrix *M) {
+Matrix* cml_shape(Matrix *M) {
     if(M==NULL) {
-        printf("shape_m: Matrix is NULL.\n");
+        cml_error("Matrix is NULL.");
         return NULL;
-    }else if(M->m==NULL){
-        printf("W: shape_m: Matrix->m is NULL.\n");
-        return basicShape(M);
-    }else{
-        return basicShape(M);
     }
+    if(M->m==NULL){
+        cml_warning("Matrix->m is NULL.");
+    }
+    return basicShape(M);
 }
 
 
-Matrix* cml_reshape_m(Matrix *M, Matrix *Shape) {
-    if(M==NULL||Shape==NULL){
-        printf("reshape_m: Matrix or Shape is NULL.\n");
+Matrix* cml_reshape(Matrix *M, Matrix *Shape) {
+    if(M==NULL || Shape==NULL){
+        cml_error("Matrix or Shape is NULL.");
         return NULL;
-    }else if(Shape->m==NULL){
-        printf("reshape_m: Shape->m is NULL.\n");
+    }
+    if(Shape->m==NULL){
+        cml_error("Shape->m is NULL.");
         return NULL;
-    }else if(M->m==NULL){
-        printf("W: reshape_m: Matrix->m is NULL.\n");
+    }
+    if(M->m==NULL){
+        cml_warning("Matrix->m is NULL.");
     }
     
-    if(M->row_n*M->col_n!=Shape->m[0]*Shape->m[1]
-    || Shape->m[0]<=0 || Shape->m[1]<=0){
-        printf("reshape_m: Shape and Matrix do not match.\n");
+    if(
+        M->row_n * M->col_n != Shape->m[0] * Shape->m[1] ||
+        Shape->m[0]<=0 || Shape->m[1]<=0
+    ){
+        cml_error("Incorrect Shape.");
         return NULL;
-    }else{
-        return basicReshape(M, Shape);
     }
+    return basicReshape(M, Shape);
 }
 
 
-Matrix* cml_reshape2_m(Matrix *M, int row, int col) {
+Matrix* cml_reshape2(Matrix *M, int row, int col) {
     Matrix *shape = basicZeros(1, 2);
     shape->m[0] = (double)row;
     shape->m[1] = (double)col;
-    Matrix *re = reshape_m(M, shape);
-    if(!re){
-        printf("reshape2_m: Error. See reshape_m above.\n");
-        return NULL;
-    }
-    basicFreeMatrix(&shape);
-    return re;
+    return cml_reshape(M, shape)
 }
 
 
-Matrix* cml_flatten_m(Matrix *M) {
-    Matrix *re = reshape2_m(M, 1, M->row_n*M->col_n);
-    if(!re){
-        printf("flatten_m: Error. See reshape_m above.\n");
-        return NULL;
-    }
-    return re;
+Matrix* cml_flatten(Matrix *M) {
+    return = cml_reshape2(M, 1, M->row_n*M->col_n);
 }
 
+
+Matrix* cml_concatenate(Matrix *A, Matrix *B, int axis) {
+    if (A==NULL || B==NULL) {
+        cml_error("A or B is NULL.");
+        return NULL;
+    }
+    if (A->m==NULL || B->m==NULL) {
+        cml_error("A->m or B->m is NULL.");
+        return NULL;
+    }
+    if (!(axis==0 || axis==1)) {
+        cml_error("Axis can only be 0 for row wise or 1 for col wise concatenation.");
+        return NULL;
+    }
+    return basicConcatenate(A, B, axis);
+}
 
 #endif
