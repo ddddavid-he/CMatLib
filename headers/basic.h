@@ -16,7 +16,7 @@
         int row_n;
         int col_n;
         double *m;
-        DataType dtype;
+//        DataType dtype;
     } Matrix;
 
 

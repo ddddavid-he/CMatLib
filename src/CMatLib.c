@@ -17,10 +17,11 @@ void __cml_logger(
 ) {
     va_list args;
     va_start(args, message);
+    char* type_name = (char*) calloc(7, sizeof(char));
     if(type==0){
-        const char *type_name = "Error";
+        type_name = "Error";
     } else {
-        const char *type_name = "Warning";
+        type_name = "Warning";
     }
     fprintf(stderr, "%s in func %s: (File: %s, Line: %d) ", type_name, func, file, line);
     vfprintf(stderr, message, args);
@@ -82,6 +83,7 @@ int cml_fillMatrixFromArray(double *array, int row, int col, Matrix *M) {
     }
     if( M->m == NULL ) {
         cml_error("Matrix->m is not allocated yet.");
+        return ERROR;
     }
 
     basicFillMatrixFromArray(array, row, col, M);
@@ -100,25 +102,27 @@ Matrix* cml_arrayToMatrix(double *array, int row, int col) {
 
 Matrix* __cml_reformIndex__(int RowCol, Matrix *Indices) {
     // enable index to be in (-l, l-1)
-    Matrix *idx = NULL;
-    if(Indices->row_n!=1 && Indices->col_n==1){
-        idx = basicTranspose(Indices);
-    }else{
-        idx = basicCopy(Indices);
-    }
+    // reform all the elements in Indices by RowCol (l).
+    Matrix *idx = basicFlatten(Indices);
+    Matrix *shape = basicShape(Indices);
 
-    for(int i=0;i<idx->row_n;i++){
-        for(int j=0;j<Indices->col_n;j++){
-            int index = giveIndex(in, i, j);
-            if(idx->m[index] < 0){
-                if(idx->m[index] < -RowCol){
-                    cml_error("index %d out of range %d.", (int)idx->m[index], RowCol);
-                    return NULL;
-                }
-                idx->m[index] += RowCol;
-            }
+
+    for(int i=0;i<idx->col_n;i++){
+        if(idx->m[i] < -RowCol){
+            cml_error("index %d out of range %d.", (int)idx->m[index], RowCol);
+            return NULL;
+        } else if (-RowCol <= idx->m[i] && idx->m[i] < 0 ) {
+            idx->m[i] += RowCol;
+        } else if (idx->m[i] >= 0 && idx->m[i] < RowCol) {
+            ;
+        } else {
+            cml_error("index %d out of range %d.", (int)idx->m[index], RowCol);
+            return NULL;
         }
     }
+    Matrix *tmp = basicReshape(idx, shape);
+    basicFreeMatrix(&idx);
+    idx = tmp;
     return idx;
 }
 
@@ -133,12 +137,12 @@ int cml_getIndex(Matrix* M, int row, int col) {
     if(M->m==NULL){
         cml_warning("Matrix->m is NULL.");
     }
-    if(i >= M->row_n && i < -M->row_n){
-        cml_error("getIndex: row index i out of range. Row=%d\n", row);
-        return NULL
-    }else if(j >= M->col_n && j < -M->col_n){
-        cml_error("getIndex: column index j out of range. Col=%d\n", col);
-        return NULL
+    if(row >= M->row_n && row < -M->row_n){
+        cml_error("getIndex: row index i out of range. Row=%d", row);
+        return ERROR;
+    }else if(col >= M->col_n && col < -M->col_n){
+        cml_error("getIndex: column index j out of range. Col=%d", col);
+        return ERROR;
     }
 
     if(row<0){
@@ -322,11 +326,11 @@ Matrix* cml_dot(Matrix *a, Matrix *b) {
 double cml_det(Matrix* M) {
     if(M==NULL){
         cml_error("Matrix is NULL.");
-        return NULL;
+//        return NULL;
     }
     if(M->m==NULL){
         cml_error("Matrix->m is NULL.");
-        return NULL;
+//        return NULL;
     }
     return basicDeterminant(M);
 }
@@ -570,11 +574,11 @@ Matrix* cml_reverse(Matrix *vec) {
 double cml_vecMax(Matrix *vec){
     if(vec==NULL){
         cml_error("Pointer vec is NULL.");
-        return NULL;
+//        return NULL;
     }
     if(vec->m==NULL){
         cml_error("vec->m is NULL.");
-        return NULL;
+//        return NULL;
     }
     return basicVecMax(vec);
 }
@@ -583,11 +587,11 @@ double cml_vecMax(Matrix *vec){
 double cml_vecMin(Matrix *vec){
     if(vec==NULL){
         cml_error("vec is NULL.");
-        return NULl;
+//        return NULl;
     }
     if(vec->m==NULL) {
         cml_error("vec->m is NULL.");
-        return NULL;
+//        return NULL;
     }
     return basicVecMin(vec);
 }
@@ -703,12 +707,12 @@ Matrix* cml_reshape2(Matrix *M, int row, int col) {
     Matrix *shape = basicZeros(1, 2);
     shape->m[0] = (double)row;
     shape->m[1] = (double)col;
-    return cml_reshape(M, shape)
+    return cml_reshape(M, shape);
 }
 
 
 Matrix* cml_flatten(Matrix *M) {
-    return = cml_reshape2(M, 1, M->row_n*M->col_n);
+    return cml_reshape2(M, 1, M->row_n*M->col_n);
 }
 
 

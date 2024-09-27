@@ -3,7 +3,7 @@
 #define CML_C_MAT_LIB_H 
 
     typedef struct __MATRIX_OBJ__ Mat;
-    typedef struct __CML_MATRIX__ Matrix;
+//    typedef struct __CML_MATRIX__ Matrix;
 
     #ifndef CML_BASIC_H 
     #ifndef CML_MATRIX_STRUCT_BODY

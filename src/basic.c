@@ -73,7 +73,7 @@ void basicFillMatrixFromArray(double* array, int row, int col, Matrix* M) {
 
 Matrix* basicArray2Matrix(double* array, int row, int col) {
     Matrix *M = malloc(sizeof(Matrix));
-    M-m = (double*) calloc(row * col, sizeof(double));
+    M->m = (double*) calloc(row * col, sizeof(double));
     basicFillMatrixFromArray(array, row, col, M);
     return M;
 }
