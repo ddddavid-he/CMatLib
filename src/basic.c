@@ -9,20 +9,20 @@
 
 
 
-void basicFreeMatrix(Matrix** Mp) {
-    // CAUTION: Mp should be pointer of a Matrix Pointer.
+void cml_basicFreeMatrix(cml_Matrix_t** Mp) {
+    // CAUTION: Mp should be pointer of a cml_Matrix_t Pointer.
     free((*Mp)->m);
     free(*Mp);
     *Mp = NULL;
 }
 
 
-int giveIndex(Matrix *M, int i, int j) {
+int cml_basicGetIndex(cml_Matrix_t *M, int i, int j) {
     return M->col_n*i + j;
 }
 
 
-void basicShowMatrix(Matrix * M) {
+void cml_basicShowMatrix(cml_Matrix_t * M) {
 
     int i,j,k;
     char format[11] = "-8.3lf  \0";
@@ -41,7 +41,7 @@ void basicShowMatrix(Matrix * M) {
     for(i=0;i<M->row_n;i++){
         printf("\t|  ");
         for(j=0;j<M->col_n;j++){
-            int index = giveIndex(M, i, j);
+            int index = cml_basicGetIndex(M, i, j);
             printf("%-8.3lf  ", M->m[index]);
         }
         printf("|\n");
@@ -57,30 +57,30 @@ void basicShowMatrix(Matrix * M) {
 }
 
 
-void basicFillMatrixFromArray(double* array, int row, int col, Matrix* M) {
+void cml_basicFillMatrixFromArray(double* array, int row, int col, cml_Matrix_t* M) {
     int i, j;
     M->row_n = row;
     M->col_n = col;
     double *m = M->m;
     for(i=0;i<row;i++) {
         for(j=0;j<col;j++) {
-            int index = giveIndex(M, i, j);
+            int index = cml_basicGetIndex(M, i, j);
             m[index] = array[index];
         }
     }
 }
 
 
-Matrix* basicArray2Matrix(double* array, int row, int col) {
-    Matrix *M = malloc(sizeof(Matrix));
+cml_Matrix_t* cml_basicArray2Matrix(double* array, int row, int col) {
+    cml_Matrix_t *M = malloc(sizeof(cml_Matrix_t));
     M->m = (double*) calloc(row * col, sizeof(double));
-    basicFillMatrixFromArray(array, row, col, M);
+    cml_basicFillMatrixFromArray(array, row, col, M);
     return M;
 }
 
 
-Matrix* basicCopy(Matrix *M) {
-    Matrix *result = malloc(sizeof(Matrix));
+cml_Matrix_t* cml_basicCopy(cml_Matrix_t *M) {
+    cml_Matrix_t *result = malloc(sizeof(cml_Matrix_t));
     result->m = calloc(M->row_n*M->col_n, sizeof(double));
     result->row_n = M->row_n;
     result->col_n = M->col_n;
@@ -91,10 +91,10 @@ Matrix* basicCopy(Matrix *M) {
 }
 
 
-Matrix* basicRange(int from, int to, int skip) {
+cml_Matrix_t* cml_basicRange(int from, int to, int skip) {
     // to is not included
     int length = (int)ceil(((double)(to-from))/((double)skip));
-    Matrix * vec = basicZeros(1, length);
+    cml_Matrix_t * vec = cml_basicZeros(1, length);
     if(skip>0){
         for(int i=from,j=0;i<to; i+=skip,j++){
             vec->m[j] = i;
@@ -109,8 +109,8 @@ Matrix* basicRange(int from, int to, int skip) {
 } 
 
 
-Matrix* basicEmpty(int row, int col) {
-    Matrix *M = (Matrix*) malloc(sizeof(Matrix));
+cml_Matrix_t* cml_basicEmpty(int row, int col) {
+    cml_Matrix_t *M = (cml_Matrix_t*) malloc(sizeof(cml_Matrix_t));
     M->row_n = row;
     M->col_n = col;
     M->m = calloc(row*col, sizeof(double));
@@ -118,8 +118,8 @@ Matrix* basicEmpty(int row, int col) {
 }
 
 
-Matrix* basicZeros(int row, int col) {
-    Matrix *M = malloc(sizeof(Matrix));
+cml_Matrix_t* cml_basicZeros(int row, int col) {
+    cml_Matrix_t *M = malloc(sizeof(cml_Matrix_t));
     M->row_n = row;
     M->col_n = col;
     M->m = calloc(row*col, sizeof(double));
@@ -130,8 +130,8 @@ Matrix* basicZeros(int row, int col) {
 }
 
 
-Matrix* basicOnes(int row, int col) {
-    Matrix * M = malloc(sizeof(Matrix));
+cml_Matrix_t* cml_basicOnes(int row, int col) {
+    cml_Matrix_t * M = malloc(sizeof(cml_Matrix_t));
     M->row_n = row;
     M->col_n = col;
     M->m = calloc(row*col, sizeof(double));
@@ -142,56 +142,56 @@ Matrix* basicOnes(int row, int col) {
 }
 
 
-Matrix* basicZerosLike(Matrix *M) {
-    return basicZeros(M->row_n, M->col_n);
+cml_Matrix_t* cml_basicZerosLike(cml_Matrix_t *M) {
+    return cml_basicZeros(M->row_n, M->col_n);
 }
 
 
-Matrix* basicOnesLike(Matrix *M) {
-    return basicOnes(M->row_n, M->col_n);
+cml_Matrix_t* cml_basicOnesLike(cml_Matrix_t *M) {
+    return cml_basicOnes(M->row_n, M->col_n);
 }
 
 
-Matrix* basicIdentity(int d) {
-    Matrix *re = basicZeros(d, d);
+cml_Matrix_t* cml_basicIdentity(int d) {
+    cml_Matrix_t *re = cml_basicZeros(d, d);
     for(int i=0;i<d;i++){
-        re->m[giveIndex(re, i, i)] = 1.;
+        re->m[cml_basicGetIndex(re, i, i)] = 1.;
     }
     return re;
 } 
 
 
-Matrix* basicIdentityLike(Matrix* M) {
+cml_Matrix_t* cml_basicIdentityLike(cml_Matrix_t* M) {
     // only square matrix can do this
-    Matrix *re = basicZerosLike(M);
+    cml_Matrix_t *re = cml_basicZerosLike(M);
     for(int i=0;i<M->row_n;i++) {
-        re->m[giveIndex(re, i, i)] = 1.;
+        re->m[cml_basicGetIndex(re, i, i)] = 1.;
     }
     return re;
 }
 
 
-Matrix* basicTranspose(Matrix* M) {
-    Matrix *result = malloc(sizeof(Matrix));
+cml_Matrix_t* cml_basicTranspose(cml_Matrix_t* M) {
+    cml_Matrix_t *result = malloc(sizeof(cml_Matrix_t));
     result->row_n = M->col_n;
     result->col_n = M->row_n;
     result->m = calloc(M->row_n*M->col_n, sizeof(double));
     int i, j;
     for(i=0;i<M->row_n;i++){
         for(j=0;j<M->col_n;j++){
-            result->m[j*result->col_n+i] = M->m[giveIndex(M, i, j)];
+            result->m[j*result->col_n+i] = M->m[cml_basicGetIndex(M, i, j)];
         }
     }
     return result;
 }
 
 
-Matrix* basicAdd(Matrix *a, Matrix *b) {
+cml_Matrix_t* cml_basicAdd(cml_Matrix_t *a, cml_Matrix_t *b) {
     int i, j;
-    Matrix *result = basicZeros(a->row_n, a->col_n);
+    cml_Matrix_t *result = cml_basicZeros(a->row_n, a->col_n);
     for(i=0;i<a->row_n;i++){
         for(j=0;j<a->col_n;j++){
-            int id = giveIndex(result, i, j);
+            int id = cml_basicGetIndex(result, i, j);
             result->m[id] = a->m[id] + b->m[id];
         }
     }
@@ -200,12 +200,12 @@ Matrix* basicAdd(Matrix *a, Matrix *b) {
 
 
 
-Matrix* basicNumProd(double a, Matrix* b) {
-    Matrix *result = basicCopy(b);
+cml_Matrix_t* cml_basicNumProd(double a, cml_Matrix_t* b) {
+    cml_Matrix_t *result = cml_basicCopy(b);
     int i, j;
     for(i=0;i<b->row_n;i++){
         for(j=0;j<b->col_n;j++){
-            int id = giveIndex(b, i, j);
+            int id = cml_basicGetIndex(b, i, j);
             result->m[id] = a * b->m[id];
         }
     }
@@ -213,21 +213,21 @@ Matrix* basicNumProd(double a, Matrix* b) {
 }
 
 
-Matrix* basicMinus(Matrix *a, Matrix*b) {
-    Matrix *bb = basicNumProd(-1., b);
-    Matrix *result = basicAdd(a, bb);
-    basicFreeMatrix(&bb);
+cml_Matrix_t* cml_basicMinus(cml_Matrix_t *a, cml_Matrix_t*b) {
+    cml_Matrix_t *bb = cml_basicNumProd(-1., b);
+    cml_Matrix_t *result = cml_basicAdd(a, bb);
+    cml_basicFreeMatrix(&bb);
     return result;
 }
 
 
-Matrix* basicDot(Matrix *a, Matrix *b) {
-    Matrix * re = basicZeros(a->row_n, b->col_n);
+cml_Matrix_t* cml_basicDot(cml_Matrix_t *a, cml_Matrix_t *b) {
+    cml_Matrix_t * re = cml_basicZeros(a->row_n, b->col_n);
     int i, j, k;
     for(i=0;i<re->row_n;i++){
         for(j=0;j<re->col_n;j++){
             for(k=0;k<a->col_n;k++){
-                re->m[giveIndex(re,i,j)] += a->m[giveIndex(a,i,k)] * b->m[giveIndex(b,k,j)];
+                re->m[cml_basicGetIndex(re,i,j)] += a->m[cml_basicGetIndex(a,i,k)] * b->m[cml_basicGetIndex(b,k,j)];
             }
         }
     }
@@ -235,8 +235,8 @@ Matrix* basicDot(Matrix *a, Matrix *b) {
 }
 
 
-Matrix* __subMatrix__(Matrix* M, int r, int c) {
-    Matrix *re = basicZeros(M->row_n-1, M->col_n-1);
+cml_Matrix_t* __subMatrix__(cml_Matrix_t* M, int r, int c) {
+    cml_Matrix_t *re = cml_basicZeros(M->row_n-1, M->col_n-1);
     int i, j, k=0;
     for(i=0;i<M->row_n;i++){
         if(i==r)
@@ -244,14 +244,14 @@ Matrix* __subMatrix__(Matrix* M, int r, int c) {
         for(j=0;j<M->col_n;j++){
             if(j==c)
                 continue;
-            re->m[k++] = M->m[giveIndex(M, i, j)];
+            re->m[k++] = M->m[cml_basicGetIndex(M, i, j)];
         }
     }
     return re;
 }
 
 
-double basicDeterminant(Matrix *a) {
+double cml_basicDeterminant(cml_Matrix_t *a) {
     double result=0;
     if(a->row_n==1){
         result = a->m[0];
@@ -259,10 +259,10 @@ double basicDeterminant(Matrix *a) {
         result = a->m[0]*a->m[3] - a->m[1]*a->m[2];
     }else{
         for(int j=0;j<a->col_n;j++){
-            if(a->m[giveIndex(a,0,j)]==0){
+            if(a->m[cml_basicGetIndex(a,0,j)]==0){
                 result += 0;
             }else{
-                result += pow(-1, j+1+1)  * a->m[giveIndex(a,0,j)] * basicDeterminant(__subMatrix__(a, 0, j));
+                result += pow(-1, j+1+1)  * a->m[cml_basicGetIndex(a,0,j)] * cml_basicDeterminant(__subMatrix__(a, 0, j));
             }
         }
     }
@@ -270,34 +270,34 @@ double basicDeterminant(Matrix *a) {
 }
 
 
-Matrix* basicInverse(Matrix* M) {
+cml_Matrix_t* cml_basicInverse(cml_Matrix_t* M) {
     if(M->row_n==1){
-        return basicNumProd(1./M->m[0], basicOnesLike(M));
+        return cml_basicNumProd(1./M->m[0], cml_basicOnesLike(M));
     }
     
-    Matrix *cofactor = basicZerosLike(M);
+    cml_Matrix_t *cofactor = cml_basicZerosLike(M);
     int i, j;
     for(i=0;i<cofactor->row_n;i++){
         for(j=0;j<cofactor->col_n;j++){
-            cofactor->m[giveIndex(cofactor,i,j)] = \
-                pow(-1, i+j+2)*basicDeterminant(__subMatrix__(M, i, j));
+            cofactor->m[cml_basicGetIndex(cofactor,i,j)] = \
+                pow(-1, i+j+2)*cml_basicDeterminant(__cml_basicSubMatrix__(M, i, j));
         }
     }
-    return basicNumProd(1./basicDeterminant(M), basicTranspose(cofactor));
+    return cml_basicNumProd(1./cml_basicDeterminant(M), cml_basicTranspose(cofactor));
 }
 
 
-Matrix* basicDiag(double* array, int l) {
-    Matrix *re = basicZeros(l, l);
+cml_Matrix_t* cml_basicDiag(double* array, int l) {
+    cml_Matrix_t *re = cml_basicZeros(l, l);
     for(int i=0;i<l;i++){
-        re->m[giveIndex(re, i, i)] = array[i];
+        re->m[cml_basicGetIndex(re, i, i)] = array[i];
     }
     return re;
 }
 
 
-Matrix* basic_3d_cross(Matrix *a, Matrix *b) {
-    Matrix *re = basicZerosLike(a);
+cml_Matrix_t* cml_basic_3d_cross(cml_Matrix_t *a, cml_Matrix_t *b) {
+    cml_Matrix_t *re = cml_basicZerosLike(a);
     re->m[0] = a->m[1]*b->m[2] - a->m[2]*b->m[1];
     re->m[1] = a->m[2]*b->m[0] - a->m[0]*b->m[2];
     re->m[2] = a->m[0]*b->m[1] - a->m[1]*b->m[0];
@@ -305,50 +305,50 @@ Matrix* basic_3d_cross(Matrix *a, Matrix *b) {
 }
 
 
-Matrix* basicSlice(Matrix* M, Matrix* r, Matrix* c) {
-    Matrix* re = basicZeros(r->col_n, c->col_n);
+cml_Matrix_t* cml_basicSlice(cml_Matrix_t* M, cml_Matrix_t* r, cml_Matrix_t* c) {
+    cml_Matrix_t* re = cml_basicZeros(r->col_n, c->col_n);
     int i, j, p, q;
     for(i=0;i<r->col_n;i++){
         p = (int)r->m[i];
         for(j=0;j<c->col_n;j++){
             q = (int)c->m[j];
-            re->m[giveIndex(re, i, j)] = M->m[giveIndex(M, p, q)];
+            re->m[cml_basicGetIndex(re, i, j)] = M->m[cml_basicGetIndex(M, p, q)];
         }
     }
     return re;
 }
 
 
-Matrix* basicRSlice(Matrix *M, Matrix *RowSlice) {
-    return basicSlice(M, RowSlice, basicRange(0, M->col_n, 1));
+cml_Matrix_t* cml_basicRSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice) {
+    return cml_basicSlice(M, RowSlice, cml_basicRange(0, M->col_n, 1));
 }
 
 
-Matrix* basicCSlice(Matrix *M, Matrix *ColSlice) {
-    return basicSlice(M, basicRange(0, M->row_n, 1), ColSlice);
+cml_Matrix_t* cml_basicCSlice(cml_Matrix_t *M, cml_Matrix_t *ColSlice) {
+    return cml_basicSlice(M, cml_basicRange(0, M->row_n, 1), ColSlice);
 }
 
 
-Matrix* basicSum(Matrix* M, int axis) {
-    Matrix *re = NULL;
+cml_Matrix_t* cml_basicSum(cml_Matrix_t* M, int axis) {
+    cml_Matrix_t *re = NULL;
     int i, j;
     if(axis==-1) {
-        re = basicZeros(1, 1);
+        re = cml_basicZeros(1, 1);
         for(i=0;i<M->row_n*M->col_n;i++){
             re->m[0] += M->m[i];
         }
     }else if(axis==0) {
-        re = basicZeros(M->row_n, 1);
+        re = cml_basicZeros(M->row_n, 1);
         for(i=0;i<M->row_n;i++){
             for(j=0;j<M->col_n;j++){
-                re->m[i] += M->m[giveIndex(M, i, j)];
+                re->m[i] += M->m[cml_basicGetIndex(M, i, j)];
             }
         }
     }else if(axis==1) {
-        re = basicZeros(1, M->col_n);
+        re = cml_basicZeros(1, M->col_n);
         for(j=0;j<M->col_n;j++){
             for(i=0;i<M->row_n;i++){
-                re->m[j] += M->m[giveIndex(M, i, j)];
+                re->m[j] += M->m[cml_basicGetIndex(M, i, j)];
             }
         }
     }else{
@@ -358,12 +358,12 @@ Matrix* basicSum(Matrix* M, int axis) {
 }
 
 
-Matrix* basicMean(Matrix* M, int axis) {
-    Matrix *re =  basicSum(M, axis);
+cml_Matrix_t* cml_basicMean(cml_Matrix_t* M, int axis) {
+    cml_Matrix_t *re =  cml_basicSum(M, axis);
     if(axis==0){
-        re = basicNumProd(1/(double)M->col_n, re);
+        re = cml_basicNumProd(1/(double)M->col_n, re);
     }else if(axis==1){
-        re = basicNumProd(1/(double)M->row_n, re);
+        re = cml_basicNumProd(1/(double)M->row_n, re);
     }else if(axis==-1){
         re->m[0] /= (double)(M->row_n * M->col_n);
     }else{
@@ -373,30 +373,30 @@ Matrix* basicMean(Matrix* M, int axis) {
 }
 
 
-Matrix* basicMatPow(Matrix* M, int p) {
+cml_Matrix_t* cml_basicMatPow(cml_Matrix_t* M, int p) {
     // only square matrix can do this
-    Matrix *re = basicIdentity(M->row_n);
+    cml_Matrix_t *re = cml_basicIdentity(M->row_n);
     for(int i=0;i<p;i++){
-        re = basicDot(re, M);
+        re = cml_basicDot(re, M);
     }
     return re;
 }
 
 
-Matrix* basicElemPow(Matrix* M, double p) {
-    Matrix *re = basicZerosLike(M);
+cml_Matrix_t* cml_basicElemPow(cml_Matrix_t* M, double p) {
+    cml_Matrix_t *re = cml_basicZerosLike(M);
     int i, j;
     for(i=0;i<M->row_n;i++){
         for(j=0;j<M->col_n;j++){
-            re->m[giveIndex(re, i, j)] = pow(M->m[giveIndex(M, i, j)], p);
+            re->m[cml_basicGetIndex(re, i, j)] = pow(M->m[cml_basicGetIndex(M, i, j)], p);
         }
     }
     return re;
 }
 
 
-Matrix* basicVecSort(Matrix *vec) {
-    Matrix *re = basicCopy(vec);
+cml_Matrix_t* cml_basicVecSort(cml_Matrix_t *vec) {
+    cml_Matrix_t *re = cml_basicCopy(vec);
     int l = vec->row_n*(vec->row_n>=vec->col_n)
           + vec->col_n*(vec->col_n>vec->row_n);
     double temp;
@@ -413,36 +413,36 @@ Matrix* basicVecSort(Matrix *vec) {
 }
 
 
-Matrix* basicMatSort(Matrix *M, int axis, int index) {
-    Matrix *vec = NULL;
-    Matrix *re = basicCopy(M);
+cml_Matrix_t* cml_basicMatSort(cml_Matrix_t *M, int axis, int index) {
+    cml_Matrix_t *vec = NULL;
+    cml_Matrix_t *re = cml_basicCopy(M);
     int i, j, k;
     double tmp;
     if(axis==1){
-        re = basicTranspose(re);
+        re = cml_basicTranspose(re);
     }
-    vec = basicRSlice(re, basicRange(index, index+1, 1));
+    vec = cml_basicRSlice(re, cml_basicRange(index, index+1, 1));
     for(j=0;j<re->col_n-1;j++){
         for(k=j;k<re->col_n;k++){
             if(vec->m[j]>vec->m[k]){
                 for(i=0;i<re->row_n;i++){
-                    tmp = re->m[giveIndex(re,i,j)];
-                    re->m[giveIndex(re,i,j)] = re->m[giveIndex(re,i,k)];
-                    re->m[giveIndex(re,i,k)] = tmp;
+                    tmp = re->m[cml_basicGetIndex(re,i,j)];
+                    re->m[cml_basicGetIndex(re,i,j)] = re->m[cml_basicGetIndex(re,i,k)];
+                    re->m[cml_basicGetIndex(re,i,k)] = tmp;
                 }
             }
         }
     }
     if(axis==1){
-        re = basicTranspose(re);
+        re = cml_basicTranspose(re);
     }
-    basicFreeMatrix(&vec);
+    cml_basicFreeMatrix(&vec);
     return re;
 }
 
 
-Matrix* basicReverse(Matrix *vec) {
-    Matrix *re = basicCopy(vec);
+cml_Matrix_t* cml_basicReverse(cml_Matrix_t *vec) {
+    cml_Matrix_t *re = cml_basicCopy(vec);
     int l = vec->row_n*(vec->row_n>=vec->col_n)
           + vec->col_n*(vec->col_n>vec->row_n);
     for(int i=0;i<l;i++){
@@ -452,116 +452,124 @@ Matrix* basicReverse(Matrix *vec) {
 }
 
 
-double basicVecMax(Matrix *vec) {
-    Matrix *tmp = basicVecSort(vec);
+double cml_basicVecMax(cml_Matrix_t *vec) {
+    cml_Matrix_t *tmp = cml_basicVecSort(vec);
     double max;
     if(vec->row_n==1){
         max = tmp->m[vec->col_n-1];
     }else{
         max = tmp->m[vec->row_n-1];
     }
-    basicFreeMatrix(&tmp);
+    cml_basicFreeMatrix(&tmp);
     return max;
 }
 
 
-double basicVecMin(Matrix *vec) {
-    Matrix *tmp = basicVecSort(vec);
+double cml_basicVecMin(cml_Matrix_t *vec) {
+    cml_Matrix_t *tmp = cml_basicVecSort(vec);
     double min = tmp->m[0];
-    basicFreeMatrix(&tmp);
+    cml_basicFreeMatrix(&tmp);
     return min;
 }
 
 
-Matrix* basicMatMax(Matrix *M, int axis) {
-    Matrix *re=NULL, *tmp=basicCopy(M);
+cml_Matrix_t* cml_basicMatMax(cml_Matrix_t *M, int axis) {
+    cml_Matrix_t *re=NULL, *tmp=cml_basicCopy(M);
 
     if(axis==1){
-        tmp = basicTranspose(tmp);
+        tmp = cml_basicTranspose(tmp);
     }
-    re = basicZeros(tmp->row_n, 1);
+    re = cml_basicZeros(tmp->row_n, 1);
     
     for(int i=0;i<tmp->row_n;i++){
-        re->m[i] = basicVecMax(basicRSlice(tmp,basicRange(i,i+1,1)));
+        re->m[i] = cml_basicVecMax(
+            cml_basicRSlice(
+                tmp, cml_basicRange(i,i+1,1)
+            )
+        );
         // printf("%d \n", re->m[i]);
     }
     if(axis==1){
-        re = basicTranspose(re);
+        re = cml_basicTranspose(re);
     }else if(axis==-1){
-        re->m[0] = basicVecMax(re);
-        re = basicRSlice(re, basicRange(0,1,1));
+        re->m[0] = cml_basicVecMax(re);
+        re = cml_basicRSlice(re, cml_basicRange(0,1,1));
     }
-    basicFreeMatrix(&tmp);
+    cml_basicFreeMatrix(&tmp);
     return re;
 }
 
 
-Matrix* basicMatMin(Matrix *M, int axis) {
-    Matrix *re=NULL, *tmp=basicCopy(M);
+cml_Matrix_t* cml_basicMatMin(cml_Matrix_t *M, int axis) {
+    cml_Matrix_t *re=NULL, *tmp=cml_basicCopy(M);
 
     if(axis==1){
-        tmp = basicTranspose(tmp);
+        tmp = cml_basicTranspose(tmp);
     }
-    re = basicZeros(tmp->row_n, 1);
+    re = cml_basicZeros(tmp->row_n, 1);
     
     for(int i=0;i<tmp->row_n;i++){
-        re->m[i] = basicVecMin(basicRSlice(tmp,basicRange(i,i+1,1)));
+        re->m[i] = cml_basicVecMin(
+            cml_basicRSlice(
+                tmp, cml_basicRange(i,i+1,1)
+            )
+        );
     }
     if(axis==1){
-        re = basicTranspose(re);
+        re = cml_basicTranspose(re);
     }
     if(axis==-1){
-        re->m[0] = basicVecMin(re);
-        re = basicRSlice(re, basicRange(0,1,1));
+        re->m[0] = cml_basicVecMin(re);
+        re = cml_basicRSlice(re, cml_basicRange(0,1,1));
     }
-    basicFreeMatrix(&tmp);
+    cml_basicFreeMatrix(&tmp);
     return re;
 }
 
 
-int basicApply(Matrix* From, Matrix* To, Matrix* rp, Matrix *cp) {
+int cml_basicApply(cml_Matrix_t* From, cml_Matrix_t* To, cml_Matrix_t* rp, cml_Matrix_t *cp) {
     // rp and cp should be range format and reformed
     int i, j, index;
     for(i=0;i<rp->col_n;i++){
         for(j=0;j<cp->col_n;j++){
-            index = giveIndex(To, rp->m[i], cp->m[j]);
-            To->m[index] = From->m[giveIndex(From, i, j)];
+            index = cml_basicGetIndex(To, rp->m[i], cp->m[j]);
+            To->m[index] = From->m[cml_basicGetIndex(From, i, j)];
         }
     }
     return 1;
 }
 
 
-Matrix* basicShape(Matrix *M) {
-    Matrix *re = basicZeros(1, 2);
+cml_Matrix_t* cml_basicShape(cml_Matrix_t *M) {
+    cml_Matrix_t *re = cml_basicZeros(1, 2);
     re->m[0] = (double)M->row_n;
     re->m[1] = (double)M->col_n;
     return re;
 }
 
 
-Matrix* basicReshape(Matrix *M, Matrix *Shape){
-    Matrix *re = basicCopy(M);
+cml_Matrix_t* cml_basicReshape(cml_Matrix_t *M, cml_Matrix_t *Shape){
+    cml_Matrix_t *re = cml_basicCopy(M);
     re->row_n = (int)Shape->m[0];
     re->col_n = (int)Shape->m[1];
     return re;
 }
 
 
-Matrix* basicFlatten(Matrix *M) {
-    Matrix *shape = basicOnes(1, 2);
+cml_Matrix_t* cml_basicFlatten(cml_Matrix_t *M) {
+    cml_Matrix_t *shape = cml_basicOnes(1, 2);
     shape->m[0] = 1;
     shape->m[1] = (double)M->row_n*M->col_n;
-    Matrix *re = basicReshape(M, shape); 
-    basicFreeMatrix(&shape);
+    cml_Matrix_t *re = cml_basicReshape(M, shape); 
+    cml_basicFreeMatrix(&shape);
     return re;
 }
 
 
-Matrix* basicConcatenate(Matrix *A, Matrix *B, int axis) {
+cml_Matrix_t* cml_basicConcatenate(cml_Matrix_t *A, cml_Matrix_t *B, int axis) {
     int row=0, col=0;
-    Matrix *R_idx, *C_idx;
-    Matrix *new = basicEmpty(1, A->row_n*A->col_n + B->row_n+B->col_n);
+    cml_Matrix_t *R_idx, *C_idx;
+    cml_Matrix_t *new = cml_basicEmpty(1, A->row_n*A->col_n + B->row_n+B->col_n);
 
     if(axis==0) {
         row = A->row_n + B->row_n;
@@ -569,29 +577,29 @@ Matrix* basicConcatenate(Matrix *A, Matrix *B, int axis) {
     }else if(axis==1) {
         col = A->col_n + B->col_n;
         row = A->row_n;
-        A = basicTranspose(A);
-        B = basicTranspose(B);
+        A = cml_basicTranspose(A);
+        B = cml_basicTranspose(B);
     }else {
-        basicFreeMatrix(&new);
+        cml_basicFreeMatrix(&new);
         return NULL;
     }
 
-    R_idx = basicRange(0, A->row_n, 1);
-    C_idx = basicRange(0, B->col_n, 1);
-    basicApply(A, new, R_idx, C_idx);
-    basicFreeMatrix(&R_idx);
-    basicFreeMatrix(&C_idx);
+    R_idx = cml_basicRange(0, A->row_n, 1);
+    C_idx = cml_basicRange(0, B->col_n, 1);
+    cml_basicApply(A, new, R_idx, C_idx);
+    cml_basicFreeMatrix(&R_idx);
+    cml_basicFreeMatrix(&C_idx);
 
-    R_idx = basicRange(A->row_n, A->row_n+B->row_n, 1);
-    C_idx = basicRange(A->col_n, A->col_n+B->col_n, 1);
-    basicApply(B, new, R_idx, C_idx);
-    basicFreeMatrix(&R_idx);
-    basicFreeMatrix(&C_idx);
+    R_idx = cml_basicRange(A->row_n, A->row_n+B->row_n, 1);
+    C_idx = cml_basicRange(A->col_n, A->col_n+B->col_n, 1);
+    cml_basicApply(B, new, R_idx, C_idx);
+    cml_basicFreeMatrix(&R_idx);
+    cml_basicFreeMatrix(&C_idx);
     if(axis==1) {
-        Matrix *tmp = basicTranspose(new);
-        basicFreeMatrix(&new);
-        basicFreeMatrix(&A);
-        basicFreeMatrix(&B);
+        cml_Matrix_t *tmp = cml_basicTranspose(new);
+        cml_basicFreeMatrix(&new);
+        cml_basicFreeMatrix(&A);
+        cml_basicFreeMatrix(&B);
         new = tmp;
     }
     return new;

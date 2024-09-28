@@ -1,6 +1,7 @@
 
 main: CMatLib.o
-	gcc ./lib/libcml.a main.c -o main;
+	gcc ./lib/libcml.a main.c -o main.exe;
+
 
 
 CMatLib.o: basic.o

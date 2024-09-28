@@ -1,6 +1,7 @@
 .idea
 *.o
 *.a
+*.exe
 lib/*
 !*.placeholder
 

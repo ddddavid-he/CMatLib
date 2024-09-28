@@ -1,5 +1,5 @@
-#ifndef CML_BASIC_H  
-#define CML_BASIC_H
+#ifndef CML_cml_basic_H  
+#define CML_cml_basic_H
 
 
     #define NUM_LEN 8
@@ -12,101 +12,103 @@
 //        CHAR
 //    } DataType;
 
-    typedef struct __MATRIX__ {
-        int row_n;
-        int col_n;
-        double *m;
-//        DataType dtype;
-    } Matrix;
+	#ifndef CML_MATRIX_STRUCT_BODY
+    	#define CML_MATRIX_STRUCT_BODY
+        typedef struct __CML_MATRIX__ {
+            int row_n;
+            int col_n;
+            double *m;
+        } cml_Matrix_t;
+    #endif
 
 
 
 
-    void basicFreeMatrix(Matrix **Mp);
+    void cml_basicFreeMatrix(cml_Matrix_t **Mp);
 
-    int giveIndex(Matrix *M, int row, int col);
+    int cml_basicGetIndex(cml_Matrix_t *M, int row, int col);
 
-    void basicShowMatrix(Matrix *M);
+    void cml_basicShowMatrix(cml_Matrix_t *M);
 
-    void basicFillMatrixFromArray(double *array, int row, int col, Matrix *M);
+    void cml_basicFillMatrixFromArray(double *array, int row, int col, cml_Matrix_t *M);
 
-    Matrix* basicArray2Matrix(double *array, int row, int col);
+    cml_Matrix_t* cml_basicArray2Matrix(double *array, int row, int col);
 
-    Matrix* basicCopy(Matrix *M);
+    cml_Matrix_t* cml_basicCopy(cml_Matrix_t *M);
 
-    Matrix* basicRange(int from, int to, int skip);
+    cml_Matrix_t* cml_basicRange(int from, int to, int skip);
 
-    Matrix* basicEmpty(int row, int col);
+    cml_Matrix_t* cml_basicEmpty(int row, int col);
 
-    Matrix* basicZeros(int row, int col);
+    cml_Matrix_t* cml_basicZeros(int row, int col);
 
-    Matrix* basicOnes(int row, int col);
+    cml_Matrix_t* cml_basicOnes(int row, int col);
 
-    Matrix* basicZerosLike(Matrix *M);
+    cml_Matrix_t* cml_basicZerosLike(cml_Matrix_t *M);
 
-    Matrix* basicOnesLike(Matrix *M);
+    cml_Matrix_t* cml_basicOnesLike(cml_Matrix_t *M);
 
-    Matrix* basicIdentity(int dim);
+    cml_Matrix_t* cml_basicIdentity(int dim);
 
-    Matrix* basicIdentityLike(Matrix *M);
+    cml_Matrix_t* cml_basicIdentityLike(cml_Matrix_t *M);
 
-    Matrix* basicTranspose(Matrix *M);
+    cml_Matrix_t* cml_basicTranspose(cml_Matrix_t *M);
 
-    Matrix* basicAdd(Matrix *A, Matrix *B);
+    cml_Matrix_t* cml_basicAdd(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    Matrix* basicMinus(Matrix *A, Matrix *B);
+    cml_Matrix_t* cml_basicMinus(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    Matrix* basicNumProd(double a, Matrix *A);
+    cml_Matrix_t* cml_basicNumProd(double a, cml_Matrix_t *A);
 
-    Matrix* basicDot(Matrix *A, Matrix *B);
+    cml_Matrix_t* cml_basicDot(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    Matrix* __subMatrix__(Matrix* M, int row, int col);
+    cml_Matrix_t* __cml_basicSubMatrix__(cml_Matrix_t* M, int row, int col);
 
-    double basicDeterminant(Matrix *M);
+    double cml_basicDeterminant(cml_Matrix_t *M);
 
-    Matrix* basicInverse(Matrix *M);
+    cml_Matrix_t* cml_basicInverse(cml_Matrix_t *M);
 
-    Matrix* basicDiag(double *elem, int dim);
+    cml_Matrix_t* cml_basicDiag(double *elem, int dim);
 
-    Matrix* basic_3d_cross(Matrix *A, Matrix *B);
+    cml_Matrix_t* cml_basic_3d_cross(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    Matrix* basicSlice(Matrix *M, Matrix *RowSlice, Matrix *ColSlice);
+    cml_Matrix_t* cml_basicSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice, cml_Matrix_t *ColSlice);
 
-    Matrix* basicRSlice(Matrix *M, Matrix *RowSlice);
+    cml_Matrix_t* cml_basicRSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice);
 
-    Matrix* basicCSlice(Matrix *M, Matrix *ColSlice);
+    cml_Matrix_t* cml_basicCSlice(cml_Matrix_t *M, cml_Matrix_t *ColSlice);
 
-    Matrix* basicSum(Matrix *M, int axis);
+    cml_Matrix_t* cml_basicSum(cml_Matrix_t *M, int axis);
 
-    Matrix* basicMean(Matrix *M, int axis);
+    cml_Matrix_t* cml_basicMean(cml_Matrix_t *M, int axis);
 
-    Matrix* basicMatPow(Matrix *M, int p);
+    cml_Matrix_t* cml_basicMatPow(cml_Matrix_t *M, int p);
 
-    Matrix* basicElemPow(Matrix *M, double p);
+    cml_Matrix_t* cml_basicElemPow(cml_Matrix_t *M, double p);
 
-    Matrix* basicVecSort(Matrix *Vec);
+    cml_Matrix_t* cml_basicVecSort(cml_Matrix_t *Vec);
 
-    Matrix* basicMatSort(Matrix *M, int axis, int index);
+    cml_Matrix_t* cml_basicMatSort(cml_Matrix_t *M, int axis, int index);
 
-    Matrix* basicReverse(Matrix *Vec);
+    cml_Matrix_t* cml_basicReverse(cml_Matrix_t *Vec);
 
-    double basicVecMax(Matrix *Vec);
+    double cml_basicVecMax(cml_Matrix_t *Vec);
 
-    double basicVecMin(Matrix *Vec);
+    double cml_basicVecMin(cml_Matrix_t *Vec);
 
-    Matrix* basicMatMax(Matrix *M, int axis);
+    cml_Matrix_t* cml_basicMatMax(cml_Matrix_t *M, int axis);
 
-    Matrix* basicMatMin(Matrix *M, int axis);
+    cml_Matrix_t* cml_basicMatMin(cml_Matrix_t *M, int axis);
 
-    int basicApply(Matrix *From, Matrix *To, Matrix *RowPos, Matrix *ColPos);
+    int cml_basicApply(cml_Matrix_t *From, cml_Matrix_t *To, cml_Matrix_t *RowPos, cml_Matrix_t *ColPos);
 
-    Matrix* basicShape(Matrix *M);
+    cml_Matrix_t* cml_basicShape(cml_Matrix_t *M);
 
-    Matrix* basicReshape(Matrix *M, Matrix *Shape);
+    cml_Matrix_t* cml_basicReshape(cml_Matrix_t *M, cml_Matrix_t *Shape);
 
-    Matrix* basicFlatten(Matrix *M);
+    cml_Matrix_t* cml_basicFlatten(cml_Matrix_t *M);
 
-    Matrix* basicConcatenate(Matrix *A, Matrix *B, int axis);
+    cml_Matrix_t* cml_basicConcatenate(cml_Matrix_t *A, cml_Matrix_t *B, int axis);
 
 
 #endif
