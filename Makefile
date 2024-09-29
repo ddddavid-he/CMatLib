@@ -10,7 +10,7 @@ TARGET = main.exe
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(LIB_DIR)/%.o, $(SRCS))
 
-all: $(TARGET)
+all: $(TARGET) clean_aux
 
 libcml: $(LIB_DIR)/libcml.a
 

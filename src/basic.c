@@ -10,7 +10,11 @@
 
 
 void cml_basicFreeMatrix(cml_Matrix_t** Mp) {
-    // CAUTION: Mp should be pointer of a cml_Matrix_t Pointer.
+    /** CAUTION: Mp should be pointer of a cml_Matrix_t Pointer.
+    Usage:
+        cml_Matrix_t *Pointer_M;
+        cml_basicFreeMatrix(&M);
+    **/
     free((*Mp)->m);
     free(*Mp);
     *Mp = NULL;
@@ -81,7 +85,7 @@ cml_Matrix_t* cml_basicArray2Matrix(double* array, int row, int col) {
 
 cml_Matrix_t* cml_basicCopy(cml_Matrix_t *M) {
     cml_Matrix_t *result = malloc(sizeof(cml_Matrix_t));
-    result->m = calloc(M->row_n*M->col_n, sizeof(double));
+    result->m = (double*) calloc(M->row_n*M->col_n, sizeof(double));
     result->row_n = M->row_n;
     result->col_n = M->col_n;
     for(int i=0;i<M->row_n*M->col_n;i++){
@@ -235,7 +239,7 @@ cml_Matrix_t* cml_basicDot(cml_Matrix_t *a, cml_Matrix_t *b) {
 }
 
 
-cml_Matrix_t* __subMatrix__(cml_Matrix_t* M, int r, int c) {
+cml_Matrix_t* __cml_basicSubMatrix__(cml_Matrix_t* M, int r, int c) {
     cml_Matrix_t *re = cml_basicZeros(M->row_n-1, M->col_n-1);
     int i, j, k=0;
     for(i=0;i<M->row_n;i++){
@@ -262,7 +266,7 @@ double cml_basicDeterminant(cml_Matrix_t *a) {
             if(a->m[cml_basicGetIndex(a,0,j)]==0){
                 result += 0;
             }else{
-                result += pow(-1, j+1+1)  * a->m[cml_basicGetIndex(a,0,j)] * cml_basicDeterminant(__subMatrix__(a, 0, j));
+                result += pow(-1, j+1+1)  * a->m[cml_basicGetIndex(a,0,j)] * cml_basicDeterminant(__cml_basicSubMatrix__(a, 0, j));
             }
         }
     }
@@ -527,12 +531,12 @@ cml_Matrix_t* cml_basicMatMin(cml_Matrix_t *M, int axis) {
 }
 
 
-int cml_basicApply(cml_Matrix_t* From, cml_Matrix_t* To, cml_Matrix_t* rp, cml_Matrix_t *cp) {
+int cml_basicApply(cml_Matrix_t* From, cml_Matrix_t* To, cml_Matrix_t* R_idx, cml_Matrix_t *C_idx) {
     // rp and cp should be range format and reformed
     int i, j, index;
-    for(i=0;i<rp->col_n;i++){
-        for(j=0;j<cp->col_n;j++){
-            index = cml_basicGetIndex(To, rp->m[i], cp->m[j]);
+    for(i=0;i<R_idx->col_n;i++){
+        for(j=0;j<C_idx->col_n;j++){
+            index = cml_basicGetIndex(To, R_idx->m[i], C_idx->m[j]);
             To->m[index] = From->m[cml_basicGetIndex(From, i, j)];
         }
     }
