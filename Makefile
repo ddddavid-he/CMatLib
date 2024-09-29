@@ -1,18 +1,45 @@
+HEADER_DIR = headers
+SRC_DIR = src
+LIB_DIR = lib
 
-main: CMatLib.o
-	gcc ./lib/libcml.a main.c -o main.exe;
+CC ?= gcc
+CFLAGS ?= -I$(HEADER_DIR)
+
+TARGET = main.exe
+
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(LIB_DIR)/%.o, $(SRCS))
+
+all: $(TARGET)
+
+libcml: $(LIB_DIR)/libcml.a
+
+libcml-basic: $(LIB_DIR)/libcml-basic.a
 
 
+$(TARGET): main.o libcml libcml-basic
+	$(CC) -o $@ main.o -L$(LIB_DIR) -lcml
 
-CMatLib.o: basic.o
-	gcc -I headers -c src/CMatLib.c -o lib/CMatLib.o
-	ar rcs lib/libcml.a lib/CMatLib.o
-	# nm lib/libcml.a
-	
+main.o: main.c | $(LIB_DIR)
+	$(CC) $(CFLAGS) -c main.c -o $@
 
-basic.o: 
-	gcc -I headers -c src/basic.c -o lib/basic.o
+$(LIB_DIR)/libcml.a: $(LIB_DIR)/CMatLib.o
+	ar rcs $@ $^
 
+$(LIB_DIR)/libcml-basic.a: $(LIB_DIR)/basic.o
+	ar rcs $@ $^
+
+$(LIB_DIR)/CMatLib.o: $(SRC_DIR)/CMatLib.c $(LIB_DIR)/basic.o | $(LIB_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIB_DIR)/basic.o: $(SRC_DIR)/basic.c | $(LIB_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIB_DIR):
+	test -d $(LIB_DIR) || mkdir $(LIB_DIR)
+
+clean_aux:
+	rm -f main.o $(LIB_DIR)/*.o
 
 clean:
-	rm -d main lib/*.o lib/*.a
+	rm -rf $(TARGET) main.o $(LIB_DIR)/*.o $(LIB_DIR)/*.a

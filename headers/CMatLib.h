@@ -65,7 +65,7 @@
 
     cml_Matrix_t* cml_inv(cml_Matrix_t *M);
 
-    cml_Matrix_t* cml_diag(double *elem, uint dim);
+    cml_Matrix_t* cml_diag(double *elem, int dim);
 
     cml_Matrix_t* cml_cross_3d(cml_Matrix_t *A, cml_Matrix_t *B);
 

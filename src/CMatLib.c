@@ -354,7 +354,7 @@ cml_Matrix_t* cml_inv(cml_Matrix_t *M) {
 }
 
 
-cml_Matrix_t* cml_diag(double *m, uint dim) {
+cml_Matrix_t* cml_diag(double *m, int dim) {
     if(m==NULL){
         cml_error("Elements should be provided through m.");
         return NULL;
