@@ -9,11 +9,17 @@
 
 
 
-void cml_basicFreeMatrix(cml_Matrix_t** Mp) {
-    /** CAUTION: Mp should be pointer of a cml_Matrix_t Pointer.
+void cml_basicFreeMatrix(cml_Matrix_t **Mp) {
+    /**
+    Free up the space allocated to a pointer of Matrix, Matrix->m included.
+    Mp: cml_Matrix_t**: Address of a cml_Matrix_t Pointer
+    return: void
     Usage:
-        cml_Matrix_t *Pointer_M;
+        cml_Matrix_t *M;
+        ...
         cml_basicFreeMatrix(&M);
+        // M->m == NULL, M == NULL
+    Notice: Mp should be the `address` of a `cml_Matrix_t Pointer`.
     **/
     free((*Mp)->m);
     free(*Mp);
@@ -22,11 +28,39 @@ void cml_basicFreeMatrix(cml_Matrix_t** Mp) {
 
 
 int cml_basicGetIndex(cml_Matrix_t *M, int i, int j) {
-    return M->col_n*i + j;
+    /**
+    Convert 2D-index of (row, col) into 1D-index of M->m.
+    M: cml_Matrix_t*: Which Matrix you want to get index of.
+    i: int: row index.
+    j: int: column index.
+    return: int: 1D-index of M->m;
+    Usage:
+        cml_Matrix_t M;
+        M.row_n = 2;
+        M.col_n = 3;
+        int idx = 0, value=0;
+        for(int i=0; i<M.row_n; i++) {
+            for(int j=0; j<M.row_n; j++) {
+                idx = cml_basicGetIndex(&M, i, j);
+                M.m[idx] = value++
+            }
+        }
+    // M == [ [0, 1, 2],
+    //        [3, 4, 5] ]
+    **/
+    return M->col_n * i + j;
 }
 
 
-void cml_basicShowMatrix(cml_Matrix_t * M) {
+void cml_basicShowMatrix(cml_Matrix_t *M) {
+    /**
+    Function to print a Matrix
+    M: cml_Matrix_t*: Pointer of a Matrix
+    Usage:
+        cml_Matrix_t *M;
+        ...
+        cml_basicShowMatrix(M);
+    **/
 
     int i,j,k;
     char format[11] = "-8.3lf  \0";
@@ -61,15 +95,31 @@ void cml_basicShowMatrix(cml_Matrix_t * M) {
 }
 
 
-void cml_basicFillMatrixFromArray(double* array, int row, int col, cml_Matrix_t* M) {
-    int i, j;
-    M->row_n = row;
-    M->col_n = col;
+void cml_basicFillMatrixFromArray(double* array, cml_Matrix_t* M) {
+    /**
+    Fill values from an array into a Matrix.
+    Shape of the Matrix has to be defined and Matrix->m has to be allocated
+    before passing Matrix to this function.
+    array: double*: array of values to be filled.
+    M: cml_Matrix_t*: Matrix to be filled.
+    Usage:
+        cml_Matrix_t M;
+        M.row_n = 2;
+        M.col_n = 2;
+        M.m = (double*) calloc(M.row_n*M.col_n, sizeof(double));
+        double array[4] = {1, 2, 3, 4};
+        cml_basicFillMatrixFromArray(array, &M);
+    // M == [ [1, 2],
+    //        [3, 4] ]
+    **/
+    int i, j, idx;
+    const int row = M->row_n;
+    const int col = M->col_n;
     double *m = M->m;
     for(i=0;i<row;i++) {
         for(j=0;j<col;j++) {
-            int index = cml_basicGetIndex(M, i, j);
-            m[index] = array[index];
+            idx = cml_basicGetIndex(M, i, j);
+            m[idx] = array[idx];
         }
     }
 }
@@ -78,7 +128,7 @@ void cml_basicFillMatrixFromArray(double* array, int row, int col, cml_Matrix_t*
 cml_Matrix_t* cml_basicArray2Matrix(double* array, int row, int col) {
     cml_Matrix_t *M = malloc(sizeof(cml_Matrix_t));
     M->m = (double*) calloc(row * col, sizeof(double));
-    cml_basicFillMatrixFromArray(array, row, col, M);
+    cml_basicFillMatrixFromArray(array, M);
     return M;
 }
 

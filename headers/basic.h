@@ -30,7 +30,7 @@
 
     void cml_basicShowMatrix(cml_Matrix_t *M);
 
-    void cml_basicFillMatrixFromArray(double *array, int row, int col, cml_Matrix_t *M);
+    void cml_basicFillMatrixFromArray(double *array, cml_Matrix_t *M);
 
     cml_Matrix_t* cml_basicArray2Matrix(double *array, int row, int col);
 

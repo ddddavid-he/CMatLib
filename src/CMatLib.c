@@ -66,14 +66,14 @@ cml_Matrix_t* cml_empty(uint row, uint col) {
 }
 
 
-int cml_fillMatrixFromArray(double *array, int row, int col, cml_Matrix_t *M) {
+int cml_fillMatrixFromArray(double *array, cml_Matrix_t *M) {
     // fill values from array to matrix M
     // notice: Matrix->m should be allocated before this function
     if( array==NULL ) {
         cml_error("array is NULL.");
         return ERROR;
     }
-    if( row<=0 || col<=0 ) {
+    if( M->row_n<=0 || M->col_n<=0 ) {
         cml_error("row and col should be positive.");
         return ERROR;
     }
@@ -86,7 +86,7 @@ int cml_fillMatrixFromArray(double *array, int row, int col, cml_Matrix_t *M) {
         return ERROR;
     }
 
-    cml_basicFillMatrixFromArray(array, row, col, M);
+    cml_basicFillMatrixFromArray(array, M);
     return SUCCEED;
 }
 
@@ -95,7 +95,7 @@ cml_Matrix_t* cml_arrayToMatrix(double *array, int row, int col) {
     // create a Matrix from values of array
     cml_Matrix_t *M = (cml_Matrix_t*) malloc(sizeof(cml_Matrix_t));
     M-> m = (double*) calloc(row*col, sizeof(double));
-    cml_fillMatrixFromArray(array, row, col, M);
+    cml_fillMatrixFromArray(array, M);
     return M;
 }
 
