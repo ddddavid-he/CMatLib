@@ -10,17 +10,6 @@
 
 
 void cml_basicFreeMatrix(cml_Matrix_t **Mp) {
-    /**
-    Free up the space allocated to a pointer of Matrix, Matrix->m included.
-    Mp: cml_Matrix_t**: Address of a cml_Matrix_t Pointer
-    return: void
-    Usage:
-        cml_Matrix_t *M;
-        ...
-        cml_basicFreeMatrix(&M);
-        // M->m == NULL, M == NULL
-    Notice: Mp should be the `address` of a `cml_Matrix_t Pointer`.
-    **/
     free((*Mp)->m);
     free(*Mp);
     *Mp = NULL;
@@ -28,40 +17,11 @@ void cml_basicFreeMatrix(cml_Matrix_t **Mp) {
 
 
 int cml_basicGetIndex(cml_Matrix_t *M, int i, int j) {
-    /**
-    Convert 2D-index of (row, col) into 1D-index of M->m.
-    M: cml_Matrix_t*: Which Matrix you want to get index of.
-    i: int: row index.
-    j: int: column index.
-    return: int: 1D-index of M->m;
-    Usage:
-        cml_Matrix_t M;
-        M.row_n = 2;
-        M.col_n = 3;
-        int idx = 0, value=0;
-        for(int i=0; i<M.row_n; i++) {
-            for(int j=0; j<M.row_n; j++) {
-                idx = cml_basicGetIndex(&M, i, j);
-                M.m[idx] = value++
-            }
-        }
-    // M == [ [0, 1, 2],
-    //        [3, 4, 5] ]
-    **/
     return M->col_n * i + j;
 }
 
 
 void cml_basicShowMatrix(cml_Matrix_t *M) {
-    /**
-    Function to print a Matrix
-    M: cml_Matrix_t*: Pointer of a Matrix
-    Usage:
-        cml_Matrix_t *M;
-        ...
-        cml_basicShowMatrix(M);
-    **/
-
     int i,j,k;
     char format[11] = "-8.3lf  \0";
 
@@ -96,22 +56,6 @@ void cml_basicShowMatrix(cml_Matrix_t *M) {
 
 
 void cml_basicFillMatrixFromArray(double* array, cml_Matrix_t* M) {
-    /**
-    Fill values from an array into a Matrix.
-    Shape of the Matrix has to be defined and Matrix->m has to be allocated
-    before passing Matrix to this function.
-    array: double*: array of values to be filled.
-    M: cml_Matrix_t*: Matrix to be filled.
-    Usage:
-        cml_Matrix_t M;
-        M.row_n = 2;
-        M.col_n = 2;
-        M.m = (double*) calloc(M.row_n*M.col_n, sizeof(double));
-        double array[4] = {1, 2, 3, 4};
-        cml_basicFillMatrixFromArray(array, &M);
-    // M == [ [1, 2],
-    //        [3, 4] ]
-    **/
     int i, j, idx;
     const int row = M->row_n;
     const int col = M->col_n;
@@ -145,16 +89,15 @@ cml_Matrix_t* cml_basicCopy(cml_Matrix_t *M) {
 }
 
 
-cml_Matrix_t* cml_basicRange(int from, int to, int skip) {
-    // to is not included
-    int length = (int)ceil(((double)(to-from))/((double)skip));
+cml_Matrix_t* cml_basicRange(int from, int to, int step) {
+    const int length = (int)ceil(((double)(to-from))/((double)step));
     cml_Matrix_t * vec = cml_basicZeros(1, length);
-    if(skip>0){
-        for(int i=from,j=0;i<to; i+=skip,j++){
+    if(step>0){
+        for(int i=from,j=0; i<to; i+=step,j++){
             vec->m[j] = i;
         }
     }else{
-        for(int i=from,j=0;i>to; i+=skip,j++){
+        for(int i=from,j=0; i>to; i+=step,j++){
             vec->m[j] = i;
         }
     }
@@ -216,11 +159,7 @@ cml_Matrix_t* cml_basicIdentity(int d) {
 
 
 cml_Matrix_t* cml_basicIdentityLike(cml_Matrix_t* M) {
-    // only square matrix can do this
-    cml_Matrix_t *re = cml_basicZerosLike(M);
-    for(int i=0;i<M->row_n;i++) {
-        re->m[cml_basicGetIndex(re, i, i)] = 1.;
-    }
+    cml_Matrix_t *re = cml_basicIdentity(M->row_n);
     return re;
 }
 
