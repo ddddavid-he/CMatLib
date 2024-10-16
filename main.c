@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-// #include "headers/basicCalculation.h"
-#include "headers/matrixCalculation.h"
+// #include "headers/basic.h"
+#include "headers/CMatLib.h"
 
 
 void skip2Row() {
