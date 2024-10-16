@@ -219,6 +219,7 @@
     Transpose the given Matrix.
     (The returning value is a copy of the original Matrix)
     M: cml_Matrix_t*: the Matrix to be transposed.
+    return: cml_Matrix_t*: pointer of returning Matrix.
     Example:
         double array[4] = {1, 2, 3, 4};
         cml_Matrix_t *M = cml_basicArray2Matrix(array, 2, 2);
@@ -230,12 +231,57 @@
     */
 
     cml_Matrix_t* cml_basicAdd(cml_Matrix_t *A, cml_Matrix_t *B);
+    /*
+    Matrix add function. Performs Matrix_A + Matrix_B.
+    Matrices are added element-wised.
+    A, B: cml_Matrix*: Matrix to be added.
+    return: cml_Matrix_t*: pointer of returning Matrix.
+    Example:
+        double array[4] = {1, 2, 3, 4};
+        cml_Matrix_t *A = cml_basicArray2Matrix(array, 2, 2);
+        cml_Matrix_t *B = cml_basicArray2Matrix(array, 2, 2);
+        cml_Matrix_t *M = cml_basicAdd(A, B);
+    // M == [ [2, 4], [6, 8] ];
+    */
 
     cml_Matrix_t* cml_basicMinus(cml_Matrix_t *A, cml_Matrix_t *B);
+    /*
+    Matrix minus function. Performs Matrix_A - Matrix_B element-wise.
+    A, B: cml_Matrix*: Matrix to be calculated.
+    return: cml_Matrix_t*: pointer of returning Matrix.
+    Example:
+        double array[4] = {1, 2, 3, 4};
+        cml_Matrix_t *A = cml_basicArray2Matrix(array, 2, 2);
+        cml_Matrix_t *B = cml_basicArray2Matrix(array, 2, 2);
+        cml_Matrix_t *M = cml_basicMinus(A, B);
+    // M == [ [0, 0], [0, 0] ];
+    */
 
     cml_Matrix_t* cml_basicNumProd(double a, cml_Matrix_t *A);
+    /*
+    Function of multiplying a Matrix by a number. Performs a * Matrix_A.
+    a: double: multiplying number.
+    A: cml_Matrix*: Matrix to be multiplied.
+    return: cml_Matrix_t*: pointer of returning Matrix.
+    Example:
+        double array[4] = {1, 2, 3, 4};
+        cml_Matrix_t *A = cml_basicArray2Matrix(array, 2, 2);
+        cml_Matrix_t *M = cml_basicNumProd(2, A);
+    // M == [ [2, 4], [6, 8] ];
+    */
 
     cml_Matrix_t* cml_basicDot(cml_Matrix_t *A, cml_Matrix_t *B);
+    /*
+    Function of performing dot product of two matrices. Performs Matrix_A * Matrix_B.
+    A, B: cml_Matrix*: Matrices to be multiplied.
+    return: cml_Matrix_t*: pointer of returning Matrix.
+    Example:
+        double array[4] = {1, 2, 3, 4};
+        cml_Matrix_t *A = cml_basicArray2Matrix(array, 2, 2);
+        cml_Matrix_t *B = cml_basicArray2Matrix(array, 2, 2);
+        cml_Matrix_t *M = cml_basicDot(A, B);
+    // M == [ [7, 10], [15, 22] ];
+    */
 
     cml_Matrix_t* __cml_basicSubMatrix__(cml_Matrix_t* M, int row, int col);
 
