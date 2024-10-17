@@ -228,14 +228,14 @@ cml_Matrix_t* cml_basicDot(cml_Matrix_t *a, cml_Matrix_t *b) {
 }
 
 
-cml_Matrix_t* __cml_basicSubMatrix__(cml_Matrix_t* M, int r, int c) {
+cml_Matrix_t* cml_basicSubMatrix(cml_Matrix_t* M, int row, int col) {
     cml_Matrix_t *re = cml_basicZeros(M->row_n-1, M->col_n-1);
     int i, j, k=0;
     for(i=0;i<M->row_n;i++){
-        if(i==r)
+        if(i == row)
             continue;
         for(j=0;j<M->col_n;j++){
-            if(j==c)
+            if(j == col)
                 continue;
             re->m[k++] = M->m[cml_basicGetIndex(M, i, j)];
         }
@@ -255,7 +255,8 @@ double cml_basicDeterminant(cml_Matrix_t *a) {
             if(a->m[cml_basicGetIndex(a,0,j)]==0){
                 result += 0;
             }else{
-                result += pow(-1, j+1+1)  * a->m[cml_basicGetIndex(a,0,j)] * cml_basicDeterminant(__cml_basicSubMatrix__(a, 0, j));
+                result += pow(-1, j+1+1)  * a->m[cml_basicGetIndex(a,0,j)] * cml_basicDeterminant(
+                        cml_basicSubMatrix(a, 0, j));
             }
         }
     }
@@ -273,7 +274,7 @@ cml_Matrix_t* cml_basicInverse(cml_Matrix_t* M) {
     for(i=0;i<cofactor->row_n;i++){
         for(j=0;j<cofactor->col_n;j++){
             cofactor->m[cml_basicGetIndex(cofactor,i,j)] = \
-                pow(-1, i+j+2)*cml_basicDeterminant(__cml_basicSubMatrix__(M, i, j));
+                pow(-1, i+j+2)*cml_basicDeterminant(cml_basicSubMatrix(M, i, j));
         }
     }
     return cml_basicNumProd(1./cml_basicDeterminant(M), cml_basicTranspose(cofactor));

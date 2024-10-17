@@ -1,9 +1,10 @@
 #ifndef CML_cml_basic_H  
 #define CML_cml_basic_H
 
-
+    // cml_showMatrix format definitions
     #define NUM_LEN 8
     #define FLOAT_LEN 5
+    // end
 
 	#ifndef CML_MATRIX_STRUCT_BODY
     	#define CML_MATRIX_STRUCT_BODY
@@ -17,20 +18,21 @@
 
 
 
-    void cml_basicFreeMatrix(cml_Matrix_t **Mp);
+
     /*
     Free up the space allocated to a pointer of Matrix, Matrix->m included.
     Mp: cml_Matrix_t**: Address of a cml_Matrix_t Pointer
     return: void
     Example:
-     cml_Matrix_t *M;
-     ...
-     cml_basicFreeMatrix(&M);
+        cml_Matrix_t *M;
+        ...
+        cml_basicFreeMatrix(&M);
     // M->m == NULL, M == NULL
     Notice: Mp should be the `address` of a `cml_Matrix_t Pointer`.
     */
+    void cml_basicFreeMatrix(cml_Matrix_t **Mp);
 
-    int cml_basicGetIndex(cml_Matrix_t *M, int row, int col);
+
     /*
     Convert 2D-index of (row, col) into 1D-index of M->m.
     M: cml_Matrix_t*: Which Matrix you want to get index of.
@@ -51,8 +53,9 @@
     // M == [ [0, 1, 2],
     //        [3, 4, 5] ]
     */
+    int cml_basicGetIndex(cml_Matrix_t *M, int row, int col);
 
-    void cml_basicShowMatrix(cml_Matrix_t *M);
+
     /*
     Function to print a Matrix
     M: cml_Matrix_t*: Pointer of a Matrix
@@ -62,8 +65,9 @@
     ...
     cml_basicShowMatrix(M);
     */
+    void cml_basicShowMatrix(cml_Matrix_t *M);
 
-    void cml_basicFillMatrixFromArray(double *array, cml_Matrix_t *M);
+
     /*
     Fill values from an array into a Matrix.
     Shape of the Matrix has to be defined and Matrix->m has to be allocated
@@ -81,8 +85,9 @@
     // M == [ [1, 2],
     //        [3, 4] ]
     */
+    void cml_basicFillMatrixFromArray(double *array, cml_Matrix_t *M);
 
-    cml_Matrix_t* cml_basicArray2Matrix(double *array, int row, int col);
+
     /*
     Create a Matrix from array with specified (row, col).
     array: double*: array of values.
@@ -96,8 +101,9 @@
     // M == [ [1, 2],
     //        [3, 4] ]
     */
+    cml_Matrix_t* cml_basicArray2Matrix(double *array, int row, int col);
 
-    cml_Matrix_t* cml_basicCopy(cml_Matrix_t *M);
+
     /*
     Copy a Matrix to another.
     M: cml_Matrix_t*: source Matrix.
@@ -110,8 +116,9 @@
     // new == old
     Notice: returning Matrix is re-allocated Matrix instead of a reference.
     */
+    cml_Matrix_t* cml_basicCopy(cml_Matrix_t *M);
 
-    cml_Matrix_t* cml_basicRange(int from, int to, int step);
+
     /*
     Create a Matrix of arithmetic progression.
     from: int: start number of the series.
@@ -122,8 +129,9 @@
     // series == [[1, 3, 5, 7, 9]]
     Notice: `to` is not included while `from` is.
     */
+    cml_Matrix_t* cml_basicRange(int from, int to, int step);
 
-    cml_Matrix_t* cml_basicEmpty(int row, int col);
+
     /*
     Create an empty matrix (allocated but not initialized).
     row: int: row number of the Matrix.
@@ -137,8 +145,9 @@
         M->m[0] = 4;
     // M == [ [1, 2], [3, 4] ]
     */
+    cml_Matrix_t* cml_basicEmpty(int row, int col);
 
-    cml_Matrix_t* cml_basicZeros(int row, int col);
+
     /*
     Create a Matrix of zeros in the shape of (row, col).
     row: int: row number of the Matrix.
@@ -148,8 +157,9 @@
         cml_Matrix_t *M = cml_basicZeros(2, 1);
     // M == [ [0], [0] ]
     */
+    cml_Matrix_t* cml_basicZeros(int row, int col);
 
-    cml_Matrix_t* cml_basicOnes(int row, int col);
+
     /*
     Create a Matrix of ones in the shape of (row, col);
     row: int: row number of the Matrix.
@@ -159,9 +169,9 @@
         cml_Matrix_t *M = cml_basicOnes(2, 1);
     // M == [ [1], [1] ]
     */
+    cml_Matrix_t* cml_basicOnes(int row, int col);
 
 
-    cml_Matrix_t* cml_basicZerosLike(cml_Matrix_t *M);
     /*
     Create a Matrix of zeros in the shape of another given Matrix.
     M: cml_Matrix_t*: the Matrix
@@ -173,8 +183,9 @@
         cml_Matrix_t *M = cml_basicZerosLike(&A);
     // M == [ [0, 0] ]
     */
+    cml_Matrix_t* cml_basicZerosLike(cml_Matrix_t *M);
 
-    cml_Matrix_t* cml_basicOnesLike(cml_Matrix_t *M);
+
     /*
     Create a Matrix of ones in the shape of another given Matrix.
     M: cml_Matrix_t*: the Matrix
@@ -186,8 +197,9 @@
         cml_Matrix_t *M = cml_basicOnesLike(&A);
     // M == [ [1, 1] ]
     */
+    cml_Matrix_t* cml_basicOnesLike(cml_Matrix_t *M);
 
-    cml_Matrix_t* cml_basicIdentity(int dim);
+
     /*
     Create an Identity Matrix of given dimension.
     dim: int: dimension of the Identity Matrix.
@@ -198,8 +210,9 @@
               [0, 1, 0],
               [0, 0, 1] ]
     */
+    cml_Matrix_t* cml_basicIdentity(int dim);
 
-    cml_Matrix_t* cml_basicIdentityLike(cml_Matrix_t *M);
+
     /*
     Create an Identity Matrix of same dimension as a given Matrix.
     M: cml_Matrix_t*: the given Matrix.
@@ -213,8 +226,9 @@
     // Notice: if M is not square-shaped. Dimension of the returning Matrix
     // equals to M->row_n.
     */
+    cml_Matrix_t* cml_basicIdentityLike(cml_Matrix_t *M);
 
-    cml_Matrix_t* cml_basicTranspose(cml_Matrix_t *M);
+
     /*
     Transpose the given Matrix.
     (The returning value is a copy of the original Matrix)
@@ -229,8 +243,9 @@
        Mt == [ [1, 3],
                [2, 4] ];
     */
+    cml_Matrix_t* cml_basicTranspose(cml_Matrix_t *M);
 
-    cml_Matrix_t* cml_basicAdd(cml_Matrix_t *A, cml_Matrix_t *B);
+
     /*
     Matrix add function. Performs Matrix_A + Matrix_B.
     Matrices are added element-wised.
@@ -243,8 +258,9 @@
         cml_Matrix_t *M = cml_basicAdd(A, B);
     // M == [ [2, 4], [6, 8] ];
     */
+    cml_Matrix_t* cml_basicAdd(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    cml_Matrix_t* cml_basicMinus(cml_Matrix_t *A, cml_Matrix_t *B);
+
     /*
     Matrix minus function. Performs Matrix_A - Matrix_B element-wise.
     A, B: cml_Matrix*: Matrix to be calculated.
@@ -256,8 +272,9 @@
         cml_Matrix_t *M = cml_basicMinus(A, B);
     // M == [ [0, 0], [0, 0] ];
     */
+    cml_Matrix_t* cml_basicMinus(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    cml_Matrix_t* cml_basicNumProd(double a, cml_Matrix_t *A);
+
     /*
     Function of multiplying a Matrix by a number. Performs a * Matrix_A.
     a: double: multiplying number.
@@ -269,8 +286,9 @@
         cml_Matrix_t *M = cml_basicNumProd(2, A);
     // M == [ [2, 4], [6, 8] ];
     */
+    cml_Matrix_t* cml_basicNumProd(double a, cml_Matrix_t *A);
 
-    cml_Matrix_t* cml_basicDot(cml_Matrix_t *A, cml_Matrix_t *B);
+
     /*
     Function of performing dot product of two matrices. Performs Matrix_A * Matrix_B.
     A, B: cml_Matrix*: Matrices to be multiplied.
@@ -282,14 +300,60 @@
         cml_Matrix_t *M = cml_basicDot(A, B);
     // M == [ [7, 10], [15, 22] ];
     */
+    cml_Matrix_t* cml_basicDot(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    cml_Matrix_t* __cml_basicSubMatrix__(cml_Matrix_t* M, int row, int col);
 
+    /*
+    Function of getting the sub-matrix of a (row, col) of a Matrix.
+    In linear algebra, A_{row,col}.
+    M: cml_Matrix_t*: the origin Matrix.
+    row, col: int: row index and col index of the sub-matrix (starting from 0)
+    returning: cml_Matrix_t*: pointer of the returning sub-matrix
+    Example:
+        cml_Matrix_t *M, *sub_M;
+        ...  // M == [ [1, 2, 3], [4, 5, 6], [7, 8, 9] ]
+        sub_M = cml_basicSubMatrix(M, 1, 1);
+    // sub_M == [ [1, 3], [7, 9] ]
+    */
+    cml_Matrix_t* cml_basicSubMatrix(cml_Matrix_t* M, int row, int col);
+
+
+    /*
+    Function of calculating determinant of a Matrix. det(M) in linear algebra.
+    M: cml_Matrix_t*: pointer of the Matrix.
+    return: value of determinant in precision of `double`.
+    Example:
+        cml_Matrix_t *M;
+        ... // M == [ [1, 2], [3, 4] ]
+        double ret = cml_basicDeterminant(M);
+    // ret == 1*4 - 2*3 = -2
+    */
     double cml_basicDeterminant(cml_Matrix_t *M);
 
+
+    /*
+    Calculating inverse matrix of a Matrix.
+    In linear algebra, writes M^{-1}. M^{-1} * M == I;
+    Example:
+        cml_Matrix_t *A, *A_inv;
+        ... // A == [ [1, 2], [3, 4] ]
+        A_inv = cml_basicInverse(A);
+    // A_inv == [ [-2, 1], [1.5, -0.5] ]
+    */
     cml_Matrix_t* cml_basicInverse(cml_Matrix_t *M);
 
+
+    /*
+    Create a diagonal matrix from double pointer.
+    Example:
+        cml_Matrix_t *M;
+        double *array = {1, 2, 3};
+        cml_Matrix_t *A;
+        A = cml_basicDiag(array, 3);
+    // A == [ [1, 0, 0], [0, 2, 0], [0, 0, 3] ]
+    */
     cml_Matrix_t* cml_basicDiag(double *elem, int dim);
+
 
     cml_Matrix_t* cml_basic_3d_cross(cml_Matrix_t *A, cml_Matrix_t *B);
 
