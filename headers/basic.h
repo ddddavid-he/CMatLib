@@ -354,14 +354,61 @@
     */
     cml_Matrix_t* cml_basicDiag(double *elem, int dim);
 
+    /*
+    Perform cross product of two 3D vectors.
+    Example:
+        cml_Matrix_t *a;
+        cml_Matrix_t *b;
+        cml_Matrix_t *c;
+        double *values_of_a = {1, 0, 0};
+        double *values_of_b = {0, 1, 0};
+        a = cml_basicArray2Matrix(values_of_a, 1, 3);
+        b = cml_basicArray2Matrix(values_of_b, 1, 3);
+        c = cml_basicCross(a, b);
+    // c == [ [0, 0, 1] ]
+    */
+    cml_Matrix_t* cml_basicCross(cml_Matrix_t *A, cml_Matrix_t *B);
 
-    cml_Matrix_t* cml_basic_3d_cross(cml_Matrix_t *A, cml_Matrix_t *B);
+    /*
+    Create a slice of the given matrix by row indices and column indices.
+    Example:
+        cml_Matrix_t *A, *Row, *Col, *Slice;
+        double *A_val = {0, 1, 2, 3};
+        double *r_val = {0, 1};
+        double *c_val = {1, 2};
+        A = cml_basicDiag(A_val, 4);
+        Row = cml_basicArray2Matrix(r_val, 1, 2);
+        Col = cml_basicArray2Matrix(c_val, 1, 2);
+        Slice = cml_basicSlice(A, Row, Col);
+    // Slice == [ [0, 0], [1, 0] ]
+    */
+    cml_Matrix_t* cml_basicSlice(cml_Matrix_t *M, cml_Matrix_t *RowIdx, cml_Matrix_t *ColIdx);
 
-    cml_Matrix_t* cml_basicSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice, cml_Matrix_t *ColSlice);
+    /*
+    Create a row slice of the given matrix by row indices.
+    Example:
+        cml_Matrix_t *A, *Row, *Slice;
+        double *A_val = {0, 1, 2, 3};
+        double *r_val = {0, 1};
+        A = cml_basicDiag(A_val, 4);
+        Row = cml_basicArray2Matrix(r_val, 1, 2);
+        Slice = cml_basicRowSlice(A, Row);
+    // Slice == [ [0, 0, 0, 0], [0, 1, 0, 0] ]
+    */
+    cml_Matrix_t* cml_basicRowSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice);
 
-    cml_Matrix_t* cml_basicRSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice);
-
-    cml_Matrix_t* cml_basicCSlice(cml_Matrix_t *M, cml_Matrix_t *ColSlice);
+    /*
+    Create a column slice of the given matrix by column indices.
+    Example:
+        cml_Matrix_t *A, *Col, *Slice;
+        double *A_val = {0, 1, 2, 3};
+        double *c_val = {3, 2};
+        A = cml_basicDiag(A_val, 4);
+        Col = cml_basicArray2Matrix(c_val, 1, 2);
+        Slice = cml_basicColSlice(A, Col);
+    // Slice == [ [0, 0], [0, 0], [0, 2], [3, 0] ]
+    */
+    cml_Matrix_t* cml_basicColSlice(cml_Matrix_t *M, cml_Matrix_t *ColSlice);
 
     cml_Matrix_t* cml_basicSum(cml_Matrix_t *M, int axis);
 

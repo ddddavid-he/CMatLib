@@ -290,7 +290,7 @@ cml_Matrix_t* cml_basicDiag(double* array, int l) {
 }
 
 
-cml_Matrix_t* cml_basic_3d_cross(cml_Matrix_t *a, cml_Matrix_t *b) {
+cml_Matrix_t* cml_basicCross(cml_Matrix_t *a, cml_Matrix_t *b) {
     cml_Matrix_t *re = cml_basicZerosLike(a);
     re->m[0] = a->m[1]*b->m[2] - a->m[2]*b->m[1];
     re->m[1] = a->m[2]*b->m[0] - a->m[0]*b->m[2];
@@ -313,12 +313,12 @@ cml_Matrix_t* cml_basicSlice(cml_Matrix_t* M, cml_Matrix_t* r, cml_Matrix_t* c) 
 }
 
 
-cml_Matrix_t* cml_basicRSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice) {
+cml_Matrix_t* cml_basicRowSlice(cml_Matrix_t *M, cml_Matrix_t *RowSlice) {
     return cml_basicSlice(M, RowSlice, cml_basicRange(0, M->col_n, 1));
 }
 
 
-cml_Matrix_t* cml_basicCSlice(cml_Matrix_t *M, cml_Matrix_t *ColSlice) {
+cml_Matrix_t* cml_basicColSlice(cml_Matrix_t *M, cml_Matrix_t *ColSlice) {
     return cml_basicSlice(M, cml_basicRange(0, M->row_n, 1), ColSlice);
 }
 

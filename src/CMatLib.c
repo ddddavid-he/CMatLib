@@ -367,7 +367,7 @@ cml_Matrix_t* cml_diag(double *m, int dim) {
 }
 
 
-cml_Matrix_t* cml_cross_3d(cml_Matrix_t *a, cml_Matrix_t *b) {
+cml_Matrix_t* cml_cross(cml_Matrix_t *a, cml_Matrix_t *b) {
     if(a==NULL || b==NULL){
         cml_error("Matrix is NULL.");
         return NULL;
@@ -378,7 +378,7 @@ cml_Matrix_t* cml_cross_3d(cml_Matrix_t *a, cml_Matrix_t *b) {
     }
 
     if(a->row_n*a->col_n==3 && b->row_n*b->col_n==3){
-        return cml_basic_3d_cross(a, b);
+        return cml_basicCross(a, b);
     }else{
         cml_error("A and B have to be 1x3 or 3x1.");
         return NULL;
