@@ -410,12 +410,62 @@
     */
     cml_Matrix_t* cml_basicColSlice(cml_Matrix_t *M, cml_Matrix_t *ColSlice);
 
+    /*
+    Sum of the elements along `axis`.
+        axis==-1: sum of all elements;
+        axis==0 : sum of each row;
+        axis==1 : sum of each column;
+    Example:
+        array *values = {1,2,3,4};
+        cml_Matrix_t *M = cml_basicArray2Matrix(values, 2, 2);
+        int s_a, s_b, s_c;
+        s_a = cml_basicSum(M, -1);
+        s_b = cml_basicSum(M, 0);
+        s_c = cml_basicSum(M, 1);
+    // s_a == 10
+    // s_b == [ [3], [7] ]
+    // s_c == [ [4, 6] ];
+    */
     cml_Matrix_t* cml_basicSum(cml_Matrix_t *M, int axis);
 
+    /*
+    Mean value of elements along `axis`.
+        axis == -1: mean value of all elements;
+        axis == 0 : mean value of each row;
+        axis == 1 : mean value of each column;
+    Example:
+        double *values = {1,2,3,4};
+        cml_Matrix_t *M = cml_basicArray2Matrix(values, 2, 2);
+        int m_a, m_b, m_c;
+        m_a = cml_basicSum(M, -1);
+        m_b = cml_basicSum(M, 0);
+        m_c = cml_basicSum(M, 1);
+    // m_a == 2.5
+    // m_b == [ [1.5], [3.5] ]
+    // m_c == [ [2, 3] ];
+    */
     cml_Matrix_t* cml_basicMean(cml_Matrix_t *M, int axis);
 
+    /*
+    Matrix of M^p (dot product of p Ms).
+    Example:
+        double *array = {1, 2};
+        cml_Matrix_t *M = cml_basicDiag(array, 2);
+        cml_Matrix_t *res;
+        res = cml_basicMatPow(M, 3);
+    // res == [ [1, 0], [0, 8] ];
+    */
     cml_Matrix_t* cml_basicMatPow(cml_Matrix_t *M, int p);
 
+    /*
+    Power operation for each element.
+    Example:
+        double *values = {0, 1, 2, 3};
+        cml_Matrix_t *M = cml_basicArray2Matrix(values, 2, 2);
+        cml_Matrix_t *res;
+        res = cml_basicElemPow(M, 2);
+    // res == [ [0, 1], [4, 9] ]
+    */
     cml_Matrix_t* cml_basicElemPow(cml_Matrix_t *M, double p);
 
     cml_Matrix_t* cml_basicVecSort(cml_Matrix_t *Vec);
