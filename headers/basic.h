@@ -430,9 +430,9 @@
 
     /*
     Mean value of elements along `axis`.
-        axis == -1: mean value of all elements;
-        axis == 0 : mean value of each row;
-        axis == 1 : mean value of each column;
+    axis == -1: mean value of all elements;
+    axis == 0 : mean value of each row;
+    axis == 1 : mean value of each column;
     Example:
         double *values = {1,2,3,4};
         cml_Matrix_t *M = cml_basicArray2Matrix(values, 2, 2);
@@ -468,18 +468,85 @@
     */
     cml_Matrix_t* cml_basicElemPow(cml_Matrix_t *M, double p);
 
+    /*
+    Sort values in a vector. (Ascending, returning a copy)
+    Example:
+        cml_Matrix_t *M, *sorted;
+        double *array = {2,4,3,1};
+        M = cml_basicArray2Matrix(array, 4, 1);
+        sorted = cml_basicVecSort(M);
+    // M == [ [2, 4, 3, 1] ]
+       sorted == [ [1, 2, 3, 4] ]
+    */
     cml_Matrix_t* cml_basicVecSort(cml_Matrix_t *Vec);
 
+    /*
+    Sort rows or columns in the order of values from a vector specified by `axis` and `index`.
+    axis == 0: sort by row number (`index`)
+    axis == 1: sort by col number (`index`)
+    Example:
+        M == [[4,5,6], [2,1,0], [1,3,3]]
+        axis=0, index=1: sorted = [[6,5,4], [0,1,2], [3,3,1]]
+        axis=1, index=0: sorted = [[1,3,3], [2,1,0], [4,5,6]]
+    */
     cml_Matrix_t* cml_basicMatSort(cml_Matrix_t *M, int axis, int index);
 
+    /*
+    Returns a copy of a vector in its reversed order.
+    Example:
+        // M == [[ 0, 1, 2, 3 ]]
+        cml_Matrix_t *M_r = cml_basicReverse(M);
+    // M_r == [[ 3, 2, 1, 0 ]]
+    */
     cml_Matrix_t* cml_basicReverse(cml_Matrix_t *Vec);
 
+    /*
+    Returns the maximum value in a vector or matrix.
+    Example:
+        // M == [ [1, 2, 3], [4, 5, 6] ]
+        double max = cml_basicVecMax(M);
+    // max == 1
+    */
     double cml_basicVecMax(cml_Matrix_t *Vec);
 
+    /*
+    Returns the minimum value in a vector or matrix.
+
+    Example:
+        // M == [ [1, 2, 3], [4, 5, 6] ]
+        double max = cml_basicVecMax(M);
+    // max == 1
+    */
     double cml_basicVecMin(cml_Matrix_t *Vec);
 
+    /*
+    Returns maximum values of rows or columns of a matrix.
+    M: cml_Matrix_t*: the input matrix.
+    axis: int: 0 or 1, calculate maximum value along axis `axis`.
+    axis == 0: returns a vector of (row, 1) of maximum values of each row.
+    axis == 1: returns a vector of (1, col) of maximum values of each column.
+    Example:
+        // M == [ [1, 2, 3], [4, 5, 6] ]
+        cml_Matrix_t* ret0 = cml_basicMatMax(M, 0);
+        cml_Matrix_t* ret1 = cml_basicMatMax(M, 1);
+    // ret0 == [ [3], [6] ]
+       ret1 == [ [4, 5, 6] ]
+    */
     cml_Matrix_t* cml_basicMatMax(cml_Matrix_t *M, int axis);
 
+    /*
+    Returns minimum values of row or columns of a matrix.
+    M: cml_Matrix_t*: the input matrix.
+    axis: int: 0 or 1, calculate minimum value along axis `axis`.
+    axis == 0: returns a vector of (row, 1) of minimum values of each row.
+    axis == 1: returns a vector of (1, col) of minimum values of each column.
+    Example:
+        // M == [ [1, 2, 3], [4, 5, 6] ]
+        cml_Matrix_t* ret0 = cml_basicMatMin(M, 0);
+        cml_Matrix_t* ret1 = cml_basicMatMin(M, 1);
+    // ret0 == [ [1], [4] ]
+       ret1 == [ [1, 2, 3] ]
+    */
     cml_Matrix_t* cml_basicMatMin(cml_Matrix_t *M, int axis);
 
     int cml_basicApply(cml_Matrix_t *From, cml_Matrix_t *To, cml_Matrix_t *RowPos, cml_Matrix_t *ColPos);

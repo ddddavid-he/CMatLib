@@ -415,7 +415,7 @@ cml_Matrix_t* cml_basicMatSort(cml_Matrix_t *M, int axis, int index) {
     if(axis==1){
         re = cml_basicTranspose(re);
     }
-    vec = cml_basicRSlice(re, cml_basicRange(index, index+1, 1));
+    vec = cml_basicRowSlice(re, cml_basicRange(index, index+1, 1));
     for(j=0;j<re->col_n-1;j++){
         for(k=j;k<re->col_n;k++){
             if(vec->m[j]>vec->m[k]){
@@ -447,22 +447,25 @@ cml_Matrix_t* cml_basicReverse(cml_Matrix_t *vec) {
 
 
 double cml_basicVecMax(cml_Matrix_t *vec) {
-    cml_Matrix_t *tmp = cml_basicVecSort(vec);
-    double max;
-    if(vec->row_n==1){
-        max = tmp->m[vec->col_n-1];
-    }else{
-        max = tmp->m[vec->row_n-1];
+    int l = vec->row_n * vec->col_n;
+    double max = 0;
+    for(int i=0;i<l;i++) {
+        if(vec->m[i]>max) {
+            max = vec->m[i];
+        }
     }
-    cml_basicFreeMatrix(&tmp);
     return max;
 }
 
 
 double cml_basicVecMin(cml_Matrix_t *vec) {
-    cml_Matrix_t *tmp = cml_basicVecSort(vec);
-    double min = tmp->m[0];
-    cml_basicFreeMatrix(&tmp);
+    int l = vec->row_n * vec->col_n;
+    double min = vec->m[0];
+    for(int i=0;i<l;i++) {
+        if(vec->m[i]<min) {
+            min = vec->m[i];
+        }
+    }
     return min;
 }
 
@@ -477,17 +480,13 @@ cml_Matrix_t* cml_basicMatMax(cml_Matrix_t *M, int axis) {
     
     for(int i=0;i<tmp->row_n;i++){
         re->m[i] = cml_basicVecMax(
-            cml_basicRSlice(
+            cml_basicRowSlice(
                 tmp, cml_basicRange(i,i+1,1)
             )
         );
-        // printf("%d \n", re->m[i]);
     }
     if(axis==1){
         re = cml_basicTranspose(re);
-    }else if(axis==-1){
-        re->m[0] = cml_basicVecMax(re);
-        re = cml_basicRSlice(re, cml_basicRange(0,1,1));
     }
     cml_basicFreeMatrix(&tmp);
     return re;
@@ -504,17 +503,13 @@ cml_Matrix_t* cml_basicMatMin(cml_Matrix_t *M, int axis) {
     
     for(int i=0;i<tmp->row_n;i++){
         re->m[i] = cml_basicVecMin(
-            cml_basicRSlice(
+            cml_basicRowSlice(
                 tmp, cml_basicRange(i,i+1,1)
             )
         );
     }
     if(axis==1){
         re = cml_basicTranspose(re);
-    }
-    if(axis==-1){
-        re->m[0] = cml_basicVecMin(re);
-        re = cml_basicRSlice(re, cml_basicRange(0,1,1));
     }
     cml_basicFreeMatrix(&tmp);
     return re;
