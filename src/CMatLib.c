@@ -66,14 +66,14 @@ cml_Matrix_t* cml_empty(uint row, uint col) {
 }
 
 
-int cml_fillMatrixFromArray(double *array, int row, int col, cml_Matrix_t *M) {
+int cml_fillMatrixFromArray(double *array, cml_Matrix_t *M) {
     // fill values from array to matrix M
     // notice: Matrix->m should be allocated before this function
     if( array==NULL ) {
         cml_error("array is NULL.");
         return ERROR;
     }
-    if( row<=0 || col<=0 ) {
+    if( M->row_n<=0 || M->col_n<=0 ) {
         cml_error("row and col should be positive.");
         return ERROR;
     }
@@ -86,7 +86,7 @@ int cml_fillMatrixFromArray(double *array, int row, int col, cml_Matrix_t *M) {
         return ERROR;
     }
 
-    cml_basicFillMatrixFromArray(array, row, col, M);
+    cml_basicFillMatrixFromArray(array, M);
     return SUCCEED;
 }
 
@@ -95,7 +95,7 @@ cml_Matrix_t* cml_arrayToMatrix(double *array, int row, int col) {
     // create a Matrix from values of array
     cml_Matrix_t *M = (cml_Matrix_t*) malloc(sizeof(cml_Matrix_t));
     M-> m = (double*) calloc(row*col, sizeof(double));
-    cml_fillMatrixFromArray(array, row, col, M);
+    cml_fillMatrixFromArray(array, M);
     return M;
 }
 
@@ -367,7 +367,7 @@ cml_Matrix_t* cml_diag(double *m, int dim) {
 }
 
 
-cml_Matrix_t* cml_cross_3d(cml_Matrix_t *a, cml_Matrix_t *b) {
+cml_Matrix_t* cml_cross(cml_Matrix_t *a, cml_Matrix_t *b) {
     if(a==NULL || b==NULL){
         cml_error("Matrix is NULL.");
         return NULL;
@@ -378,7 +378,7 @@ cml_Matrix_t* cml_cross_3d(cml_Matrix_t *a, cml_Matrix_t *b) {
     }
 
     if(a->row_n*a->col_n==3 && b->row_n*b->col_n==3){
-        return cml_basic_3d_cross(a, b);
+        return cml_basicCross(a, b);
     }else{
         cml_error("A and B have to be 1x3 or 3x1.");
         return NULL;
@@ -642,20 +642,16 @@ int cml_apply(cml_Matrix_t *From, cml_Matrix_t *To, cml_Matrix_t *Row_idx, cml_M
         cml_error("NULL found in Matrix->m(s).");
         return ERROR;
     }
-    if(Row_idx->row_n!=1){
-        Row_idx = cml_basicTranspose(Row_idx);
+    int length_of_RI = (int) Row_idx->row_n * Row_idx->col_n;
+    int length_of_CI = (int) Col_idx->row_n * Col_idx->col_n;
+    int length_of_From = (int) From->row_n * From->col_n;
+    if( length_of_RI != length_of_CI ){
+        cml_error("Length of Row_idx and Col_idx does not match. Same length is required.");
     }
-    if(Col_idx->row_n!=1){
-        Col_idx = cml_basicTranspose(Col_idx);
-    }
-    if(
-        Row_idx->col_n > From->row_n ||
-        Col_idx->col_n > From->col_n
-    ){
-        cml_error("Length of Row_idx or Col_idx is large than size of From.");
+    if( length_of_RI > length_of_From ){
+        cml_error("Length of Row_idx and Col_idx is large than size of From.");
         return ERROR;
     }
-
     if(
         cml_basicMatMax(Row_idx, -1)->m[0] > To->row_n ||
         cml_basicMatMax(Col_idx, -1)->m[0] > To->col_n
