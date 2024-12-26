@@ -642,20 +642,16 @@ int cml_apply(cml_Matrix_t *From, cml_Matrix_t *To, cml_Matrix_t *Row_idx, cml_M
         cml_error("NULL found in Matrix->m(s).");
         return ERROR;
     }
-    if(Row_idx->row_n!=1){
-        Row_idx = cml_basicTranspose(Row_idx);
+    int length_of_RI = (int) Row_idx->row_n * Row_idx->col_n;
+    int length_of_CI = (int) Col_idx->row_n * Col_idx->col_n;
+    int length_of_From = (int) From->row_n * From->col_n;
+    if( length_of_RI != length_of_CI ){
+        cml_error("Length of Row_idx and Col_idx does not match. Same length is required.");
     }
-    if(Col_idx->row_n!=1){
-        Col_idx = cml_basicTranspose(Col_idx);
-    }
-    if(
-        Row_idx->col_n > From->row_n ||
-        Col_idx->col_n > From->col_n
-    ){
-        cml_error("Length of Row_idx or Col_idx is large than size of From.");
+    if( length_of_RI > length_of_From ){
+        cml_error("Length of Row_idx and Col_idx is large than size of From.");
         return ERROR;
     }
-
     if(
         cml_basicMatMax(Row_idx, -1)->m[0] > To->row_n ||
         cml_basicMatMax(Col_idx, -1)->m[0] > To->col_n

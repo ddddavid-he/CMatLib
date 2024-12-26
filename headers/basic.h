@@ -549,14 +549,66 @@
     */
     cml_Matrix_t* cml_basicMatMin(cml_Matrix_t *M, int axis);
 
+    /*
+    Assign values from elements of a matrix to another.
+    From: cml_Matrix_t*: from which the values are selected.
+    To: cml_Matrix_t*: the values are assigned to specific positions to this matrix.
+    RowPos: cml_Matrix_t*: row indices of the values to be assigned in `To` matrix.
+    ColPos: cml_Matrix_t*: column indices of the values to be assigned in `To` matrix.
+    
+    Say r = RowPos[i], c = ColPos[i], then the function performs: 
+        To[r, c] = From->m[i]
+    Example:
+        // From == [ [1,3,5,7,9,11] ]
+        // To == [ [0,2,4,6], [8,10,12,14], [16,18,20,22], [24,26,28,30] ]
+        // RolIdx = [ [2,1,1,1,0,3] ] 
+        // ColIdx = [ [2,3,2,1,1,3] ] 
+        cml_basicApply(From, To, RolIdx, ColIdx)
+    // To == [ [0,  9,  4,  6],
+               [8,  7,  5,  3],
+               [16, 18, 1,  22],
+               [24, 26, 28, 11] ]
+    */
     int cml_basicApply(cml_Matrix_t *From, cml_Matrix_t *To, cml_Matrix_t *RowPos, cml_Matrix_t *ColPos);
 
+    /*
+    Returns the shape of the matrix.
+    M: cml_Matrix_t*: input matrix.
+    Return: cml_Matrix_t*: shape of the input matrix in the format of a 1x2 matrix 
+    Example:
+        // M == [[1,2],[3,4],[5,6]];
+        cml_Matrix_t* Shape = cml_basicShape(M);
+    // Shape == [[3, 2]]
+    */
     cml_Matrix_t* cml_basicShape(cml_Matrix_t *M);
 
+    /*
+    Change the shape of a matrix by a given shape.
+    M: cml_Matrix_t*: origin matrix.
+    Shape: cml_Matrix_t*: the shape of output matrix.
+    Example:
+        // M = [[1,2],[3,4],[5,6]]
+        // Shape = [[2, 3]]
+        cml_Matrix_t* new = cml_basicReshape(M, Shape);
+    // new == [[1,2,3], [4,5,6]]
+    */
     cml_Matrix_t* cml_basicReshape(cml_Matrix_t *M, cml_Matrix_t *Shape);
 
+    /*
+    Reshape a matrix to 1xN.
+    */
     cml_Matrix_t* cml_basicFlatten(cml_Matrix_t *M);
 
+    /*
+    Concatenate two matrix along a given axis.
+    A, B: cml_Matrix_t*: matrix to be operated.
+    axis: int: the axis along which to concatenate.
+    Example:
+        // A == [[1,2],[3,4]]
+        // B == [[5,6],[7,8]]
+        cml_Matrix_t* C = cml_basicConcatenate(A, B, 1);
+    // C == [[1,2,5,6],[3,4,7,8]]
+    */
     cml_Matrix_t* cml_basicConcatenate(cml_Matrix_t *A, cml_Matrix_t *B, int axis);
 
 

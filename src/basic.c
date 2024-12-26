@@ -488,6 +488,13 @@ cml_Matrix_t* cml_basicMatMax(cml_Matrix_t *M, int axis) {
     if(axis==1){
         re = cml_basicTranspose(re);
     }
+    if(axis==-1){
+        cml_Matrix_t *re_tmp = cml_basicZeros(1, 1);
+        re_tmp->m[0] = cml_basicVecMax(re);
+        cml_basicFreeMatrix(&re);
+        re = re_tmp;
+    }
+
     cml_basicFreeMatrix(&tmp);
     return re;
 }
@@ -511,19 +518,26 @@ cml_Matrix_t* cml_basicMatMin(cml_Matrix_t *M, int axis) {
     if(axis==1){
         re = cml_basicTranspose(re);
     }
+    if(axis==-1){
+        cml_Matrix_t *re_tmp = cml_basicZeros(1, 1);
+        re_tmp->m[0] = cml_basicVecMin(re);
+        cml_basicFreeMatrix(&re);
+        re = re_tmp;
+    }
+
     cml_basicFreeMatrix(&tmp);
     return re;
 }
 
 
 int cml_basicApply(cml_Matrix_t* From, cml_Matrix_t* To, cml_Matrix_t* R_idx, cml_Matrix_t *C_idx) {
-    // rp and cp should be range format and reformed
-    int i, j, index;
-    for(i=0;i<R_idx->col_n;i++){
-        for(j=0;j<C_idx->col_n;j++){
-            index = cml_basicGetIndex(To, R_idx->m[i], C_idx->m[j]);
-            To->m[index] = From->m[cml_basicGetIndex(From, i, j)];
-        }
+    // rp and cp should have a same length
+    int r, c, i, length;
+    length = (int) R_idx->row_n * R_idx->col_n;
+    for(i=0;i<length;i++) {
+        r = R_idx->m[i];
+        c = R_idx->m[i];
+        To->m[cml_basicGetIndex(To, r, c)] = From->m[i];
     }
     return 1;
 }
@@ -557,8 +571,6 @@ cml_Matrix_t* cml_basicFlatten(cml_Matrix_t *M) {
 
 cml_Matrix_t* cml_basicConcatenate(cml_Matrix_t *A, cml_Matrix_t *B, int axis) {
     int row=0, col=0;
-    cml_Matrix_t *R_idx, *C_idx;
-    cml_Matrix_t *new = cml_basicEmpty(1, A->row_n*A->col_n + B->row_n+B->col_n);
 
     if(axis==0) {
         row = A->row_n + B->row_n;
@@ -569,29 +581,25 @@ cml_Matrix_t* cml_basicConcatenate(cml_Matrix_t *A, cml_Matrix_t *B, int axis) {
         A = cml_basicTranspose(A);
         B = cml_basicTranspose(B);
     }else {
-        cml_basicFreeMatrix(&new);
         return NULL;
     }
-
-    R_idx = cml_basicRange(0, A->row_n, 1);
-    C_idx = cml_basicRange(0, B->col_n, 1);
-    cml_basicApply(A, new, R_idx, C_idx);
-    cml_basicFreeMatrix(&R_idx);
-    cml_basicFreeMatrix(&C_idx);
-
-    R_idx = cml_basicRange(A->row_n, A->row_n+B->row_n, 1);
-    C_idx = cml_basicRange(A->col_n, A->col_n+B->col_n, 1);
-    cml_basicApply(B, new, R_idx, C_idx);
-    cml_basicFreeMatrix(&R_idx);
-    cml_basicFreeMatrix(&C_idx);
-    if(axis==1) {
-        cml_Matrix_t *tmp = cml_basicTranspose(new);
-        cml_basicFreeMatrix(&new);
-        cml_basicFreeMatrix(&A);
-        cml_basicFreeMatrix(&B);
-        new = tmp;
+    
+    cml_Matrix_t* ret = cml_basicEmpty(row, col);
+    int i=0;
+    for(i=0;i<A->row_n*A->col_n;i++){
+        ret->m[i] = A->m[i];
     }
-    return new;
+    for(;i<B->row_n*B->col_n;i++){
+        ret->m[i] = A->m[i];
+    }
+
+    if(axis==1) {
+        cml_Matrix_t* ret_t = ret;
+        ret = cml_basicTranspose(ret_t);
+        cml_basicFreeMatrix(&ret_t);
+    }
+    return ret;
+
 }
 
 
